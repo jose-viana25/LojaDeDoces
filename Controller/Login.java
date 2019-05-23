@@ -1,6 +1,5 @@
-package Controller;
+package boundary;
 
-import java.beans.EventHandler;
 
 import javax.swing.JOptionPane;
 
@@ -58,19 +57,12 @@ public class Login extends Application {
 	}
 
 	private void iniButton() {
-		btnSair.setOnAction(ActionEvent) {
-
-			@Override
-			public void handle(ActionEvent event) {
-				fecharAplicacao();
-
-			}
-		};
-		btnEntrar.setOnAction(new javafx.event.EventHandler<ActionEvent>() {
-
-			@Override
-			public void handle(ActionEvent event) {
-				logar();
+		btnSair.setOnAction((event)->{
+			
+			fecharAplicacao();
+		});
+		btnEntrar.setOnAction((event)->{
+			logar();
 
 			}
 
@@ -82,7 +74,7 @@ public class Login extends Application {
 		if (txLogin.getText().equals("admin") && txSenha.getText().equals("admin")) {
 
 		} else {
-			JOptionPane.showMessageDialog(null, "Login e/ou Senha Inv·lida", "Erro", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(null, "Login e/ou Senha Inv√°lida", "Erro", JOptionPane.ERROR_MESSAGE);
 		}
 
 	}
