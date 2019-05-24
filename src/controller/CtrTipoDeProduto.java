@@ -31,5 +31,11 @@ public class CtrTipoDeProduto {
 
 		return daoTipoDeProduto.buscarTodosTipoDeProduto();
 	}
+	
+	public void apagarTipoDeProduto(TipoDeProduto tipoDeProduto) {
+		
+		daoTipoDeProduto.removerTipoDeProduto(tipoDeProduto);
+		
+	}
 
 }

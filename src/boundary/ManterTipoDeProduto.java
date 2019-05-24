@@ -21,8 +21,10 @@ import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 
 public class ManterTipoDeProduto extends Application {
+
+	private int codigoDoTipoDeProdutoSelecionado = -1;
 	
-	CtrTipoDeProduto ctrTipoDeProduto = new CtrTipoDeProduto();
+	private CtrTipoDeProduto ctrTipoDeProduto = new CtrTipoDeProduto();
 
 	private TextField txtfNome;
 
@@ -39,141 +41,170 @@ public class ManterTipoDeProduto extends Application {
 	private Button btnRemover;
 
 	private TableView<TipoDeProduto> tableResultados;
-	
+
 	public static void main(String[] args) {
-		
+
 		launch(args);
 
 	}
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
-		
+
 		GridPane gridRoot = new GridPane();
-		
-		GridPane grid = new GridPane();
-		
-		Label lblNome = new Label("Nome:");
-		
-		txtfNome = new TextField();
-		
-		txtaDescricao = new TextArea();
-		
+
+		GridPane grid = criarGridCadastro();
+
 		HBox hbBotoesCadastro = criarHboxBotoesCadastro();
-		
+
 		HBox hbBotoesTabela = criarHboxBotoesTabela();
-		
-		tableResultados = criarTableView();
+
+		criarTableView();
+
+		definirAcaoTabela();
 		
 		definirAcaoBotoes();
-		
-		grid.add(lblNome, 0, 0);
-		grid.add(txtfNome, 1, 0);
-		grid.add(new Label("Descrição"), 0, 1);
-		grid.add(txtaDescricao, 1, 1);
-		
-		gridRoot.add(grid,0,0);
-		gridRoot.add(hbBotoesCadastro,0,1);
+
+		gridRoot.add(grid, 0, 0);
+		gridRoot.add(hbBotoesCadastro, 0, 1);
 		gridRoot.add(tableResultados, 0, 2);
 		gridRoot.add(hbBotoesTabela, 0, 3);
-		
+
 		primaryStage.setTitle("Cadastrar Tipo de Produto");
 		primaryStage.setScene(new Scene(gridRoot));
 		primaryStage.show();
-		
+
+	}
+
+	private void definirAcaoTabela() {
+		tableResultados.getSelectionModel().selectedItemProperty().addListener(
+				(event)->{
+					
+					TipoDeProduto tipoDeProduto = 
+							tableResultados.getSelectionModel().getSelectedItem();
+					
+					if (tipoDeProduto != null) {
+						codigoDoTipoDeProdutoSelecionado = tipoDeProduto.getCodigo();
+						txtfNome.setText(tipoDeProduto.getNome());
+						txtaDescricao.setText(tipoDeProduto.getDescricao());
+					}
+					
+					
+				});
+	}
+
+	private GridPane criarGridCadastro() {
+		GridPane grid = new GridPane();
+
+		txtfNome = new TextField();
+
+		txtaDescricao = new TextArea();
+
+		grid.add(new Label("Nome:"), 0, 0);
+		grid.add(txtfNome, 1, 0);
+		grid.add(new Label("Descrição"), 0, 1);
+		grid.add(txtaDescricao, 1, 1);
+		return grid;
 	}
 
 	private HBox criarHboxBotoesTabela() {
 		HBox hbBotoesTabela = new HBox();
 		hbBotoesTabela.setAlignment(Pos.CENTER_RIGHT);
-		
+
 		btnAlterar = new Button("Alterar");
-		
+
 		btnRemover = new Button("Remover");
-		
-		hbBotoesTabela.getChildren().addAll(btnAlterar,btnRemover);
-		
+
+		hbBotoesTabela.getChildren().addAll(btnAlterar, btnRemover);
+
 		return hbBotoesTabela;
 	}
 
 	private HBox criarHboxBotoesCadastro() {
 		HBox hbBotoesCadastro = new HBox();
 		hbBotoesCadastro.setAlignment(Pos.CENTER_RIGHT);
-		
+
 		btnLimpar = new Button("Limpar");
-		
+
 		btnCadastrar = new Button("Cadastrar");
-				
+
 		btnPesquisar = new Button("Pesquisar");
-		
-		hbBotoesCadastro.getChildren().addAll(btnLimpar,btnCadastrar,btnPesquisar);
-		
+
+		hbBotoesCadastro.getChildren().addAll(btnLimpar, btnCadastrar, btnPesquisar);
+
 		return hbBotoesCadastro;
 	}
 
 	private void definirAcaoBotoes() {
-		btnLimpar.setOnAction((event)->{
-			
+		btnLimpar.setOnAction((event) -> {
+
 			limparCampos();
-			
+
 		});
-		
-		btnCadastrar.setOnAction((event)->{
-			
+
+		btnCadastrar.setOnAction((event) -> {
+
 			TipoDeProduto tipoDeProduto = new TipoDeProduto();
-			
-			tipoDeProduto.setNome(txtfNome.getText());
-			tipoDeProduto.setDescricao(txtaDescricao.getText());
-			
-			ctrTipoDeProduto.cadastrarTipoDeProduto(tipoDeProduto);
-			
-			limparCampos();
-			
-			tableResultados.getSelectionModel();
-			
-			atualizarTabela(tableResultados,
-					ctrTipoDeProduto.pesquisarTodosTipoDeProduto());
-			
-			
-		});
-		
-		btnPesquisar.setOnAction((event)->{
-			
-			TipoDeProduto tipoDeProduto = new TipoDeProduto();
-			
-			tipoDeProduto.setNome(txtfNome.getText());
-			tipoDeProduto.setDescricao(txtaDescricao.getText());
-			
-			atualizarTabela(tableResultados, 
-					ctrTipoDeProduto.pesquisarTipoDeProduto(tipoDeProduto));
-			
-		});
-		
-		btnAlterar.setOnAction((event)->{
-			
-			TipoDeProduto tipoDeProdutoSelecionado = 
-					tableResultados.getSelectionModel().getSelectedItem();
-			
-			TipoDeProduto tipoDeProduto = new TipoDeProduto();			
 
 			tipoDeProduto.setNome(txtfNome.getText());
 			tipoDeProduto.setDescricao(txtaDescricao.getText());
-			
-			ctrTipoDeProduto.mudarTipoDeProduto(tipoDeProdutoSelecionado,
-					tipoDeProduto);
-			
+
+			ctrTipoDeProduto.cadastrarTipoDeProduto(tipoDeProduto);
+
 			limparCampos();
+
+			tableResultados.getSelectionModel();
+
+			atualizarTabela(ctrTipoDeProduto.pesquisarTodosTipoDeProduto());
+
+		});
+
+		btnPesquisar.setOnAction((event) -> {
+
+			TipoDeProduto tipoDeProduto = new TipoDeProduto();
+
+			tipoDeProduto.setNome(txtfNome.getText());
+			tipoDeProduto.setDescricao(txtaDescricao.getText());
+
+			atualizarTabela(ctrTipoDeProduto.pesquisarTipoDeProduto(tipoDeProduto));
+
+		});
+
+		btnAlterar.setOnAction((event) -> {
+
+			TipoDeProduto tipoDeProdutoSelecionado = 
+					tableResultados.getSelectionModel().getSelectedItem();
+
+			TipoDeProduto tipoDeProduto = new TipoDeProduto();
+
+			tipoDeProduto.setNome(txtfNome.getText());
+			tipoDeProduto.setDescricao(txtaDescricao.getText());
+
+			ctrTipoDeProduto.mudarTipoDeProduto(tipoDeProdutoSelecionado, tipoDeProduto);
+
+			limparCampos();
+
+			atualizarTabela(ctrTipoDeProduto.pesquisarTodosTipoDeProduto());
+
+		});
+		
+		btnRemover.setOnAction((event)->{
 			
-			atualizarTabela(tableResultados, 
-					ctrTipoDeProduto.pesquisarTodosTipoDeProduto());
+			TipoDeProduto tipoDeProduto = new TipoDeProduto();
+			
+			tipoDeProduto.setCodigo(codigoDoTipoDeProdutoSelecionado);
+			tipoDeProduto.setNome(txtfNome.getText());
+			tipoDeProduto.setDescricao(txtaDescricao.getText());
+			
+			ctrTipoDeProduto.apagarTipoDeProduto(tipoDeProduto);
+			
+			atualizarTabela(ctrTipoDeProduto.pesquisarTodosTipoDeProduto());
 			
 		});
 	}
 
-	private void atualizarTabela(TableView<TipoDeProduto> tableResultados,
-			List<TipoDeProduto> listTipoDeProdutos) {
-		ObservableList<TipoDeProduto> olItens = 
-				FXCollections.observableArrayList(listTipoDeProdutos);
+	private void atualizarTabela(List<TipoDeProduto> listTipoDeProdutos) {
+		ObservableList<TipoDeProduto> olItens = FXCollections.observableArrayList(listTipoDeProdutos);
 		tableResultados.setItems(olItens);
 		tableResultados.refresh();
 	}
@@ -182,14 +213,12 @@ public class ManterTipoDeProduto extends Application {
 		txtfNome.setText("");
 		txtaDescricao.setText("");
 	}
-	
-	private TableView<TipoDeProduto> criarTableView() {
 
-		ObservableList<TipoDeProduto> olItens = 
-				FXCollections.observableArrayList();
-		
-		TableView<TipoDeProduto> tbResultados = 
-				new TableView<>(olItens);
+	private void criarTableView() {
+
+		ObservableList<TipoDeProduto> olItens = FXCollections.observableArrayList();
+
+		tableResultados = new TableView<>(olItens);
 
 		TableColumn<TipoDeProduto, Integer> tcCodigo = new TableColumn<>("Código");
 		tcCodigo.setCellValueFactory(new PropertyValueFactory<>("Codigo"));
@@ -203,13 +232,12 @@ public class ManterTipoDeProduto extends Application {
 		tcDescricao.setCellValueFactory(new PropertyValueFactory<>("Descricao"));
 		tcDescricao.setPrefWidth(180);
 
-		tbResultados.getColumns().add(tcCodigo);
-		tbResultados.getColumns().add(tcNome);
-		tbResultados.getColumns().add(tcDescricao);
-		
-		tbResultados.autosize();
+		tableResultados.getColumns().add(tcCodigo);
+		tableResultados.getColumns().add(tcNome);
+		tableResultados.getColumns().add(tcDescricao);
 
-		return tbResultados;
+		tableResultados.autosize();
+
 
 	}
 

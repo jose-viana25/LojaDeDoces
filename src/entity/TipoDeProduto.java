@@ -1,15 +1,26 @@
 package entity;
 
+import java.util.List;
+
 public class TipoDeProduto {
 	
 	private int codigo;
 	private String nome;
 	private String descricao;
+	private List<Produto> listProdutos;
 	
 	public TipoDeProduto() {
 		this.codigo = -1;
 		this.nome = "";
 		this.descricao = "";
+	}
+	
+	public List<Produto> getListProdutos() {
+		return listProdutos;
+	}
+
+	public void setListProdutos(List<Produto> listProdutos) {
+		this.listProdutos = listProdutos;
 	}
 	
 	public int getCodigo() {

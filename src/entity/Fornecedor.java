@@ -1,28 +1,35 @@
 package entity;
 
+import java.util.List;
+
 public class Fornecedor {
 	
-	private int codigo_fornecedor;
 	private String cnpj;
 	private String nome;
 	private String endereco;
 	private String descricao;
+	private List<Produto> listProdutos;
 	
 	public Fornecedor() {
-		this.codigo_fornecedor = -1;
 		this.cnpj = "";
 		this.nome = "";
 		this.endereco = "";
 		this.descricao = "";
 	}
+	
+	
 
-	public int getCodigo_fornecedor() {
-		return codigo_fornecedor;
+	public List<Produto> getListProdutos() {
+		return listProdutos;
 	}
 
-	public void setCodigo_fornecedor(int codigo_fornecedor) {
-		this.codigo_fornecedor = codigo_fornecedor;
+
+
+	public void setListProdutos(List<Produto> listProdutos) {
+		this.listProdutos = listProdutos;
 	}
+
+
 
 	public String getCnpj() {
 		return cnpj;

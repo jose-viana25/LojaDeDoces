@@ -14,14 +14,28 @@ public class CtrFornecedor {
 		daoFornecedor.criarFornecedor(fornecedor);
 	}
 
+	public void mudarFornecedor(Fornecedor fornecedorSelecionado,
+			Fornecedor fornecedor) {
+		
+		daoFornecedor.alterarFornecedor(fornecedorSelecionado,
+				fornecedor);
+		
+	}
+	
 	public List<Fornecedor> pesquisarFornecedor(Fornecedor fornecedor) {
 
 		return daoFornecedor.buscarFornecedor(fornecedor);
 	}
 
-	public List<Fornecedor> pesquisarFornecedor() {
+	public List<Fornecedor> pesquisarTodosFornecedor() {
 
 		return daoFornecedor.buscarTodosFornecedor();
+	}
+	
+	public void apagarFornecedor(Fornecedor fornecedor) {
+		
+		daoFornecedor.removerFornecedor(fornecedor);
+		
 	}
 
 }

@@ -7,14 +7,13 @@ import entity.Fornecedor;
 
 public class DaoFornecedor implements IDaoFornecedor {
 
-	List<Fornecedor> listFornecedor = new ArrayList<>();
+	private List<Fornecedor> listFornecedor = new ArrayList<>();
 
 	@Override
 	public void criarFornecedor(Fornecedor fornecedor) {
 
-		fornecedor.setCodigo_fornecedor(listFornecedor.size());
 		listFornecedor.add(fornecedor);
-
+		
 	}
 
 	@Override
@@ -32,17 +31,15 @@ public class DaoFornecedor implements IDaoFornecedor {
 
 	}
 
-	private boolean temPadrao(Fornecedor fornecedor, 
-			Fornecedor auxFornecedor) {
-		
-		return auxFornecedor.getNome().toLowerCase().contains(
+	private boolean temPadrao(Fornecedor fornecedor, Fornecedor auxFornecedor) {
+		return auxFornecedor.getCnpj().toLowerCase().contains(
+				fornecedor.getCnpj().toLowerCase())
+				&& auxFornecedor.getNome().toLowerCase().contains(
 				fornecedor.getNome().toLowerCase())
-				&& auxFornecedor.getCnpj().toLowerCase().contains(
-						fornecedor.getCnpj().toLowerCase())
 				&& auxFornecedor.getEndereco().toLowerCase().contains(
 						fornecedor.getEndereco().toLowerCase())
 				&& auxFornecedor.getDescricao().toLowerCase().contains(
-						fornecedor.getDescricao().toLowerCase()); 
+						fornecedor.getDescricao().toLowerCase());
 	}
 	
 	@Override
@@ -54,14 +51,36 @@ public class DaoFornecedor implements IDaoFornecedor {
 	}
 	
 	@Override
-	public void alterarFornecedor(Fornecedor fornecedor) {
-		// TODO Auto-generated method stub
+	public void alterarFornecedor(Fornecedor fornecedorSelecionado,Fornecedor fornecedor) {
+		
+		for (Fornecedor auxFornecedor : listFornecedor) {
+			
+			if (auxFornecedor.getCnpj() == 
+					fornecedorSelecionado.getCnpj()) {
+				
+				auxFornecedor.setNome(fornecedor.getNome());
+				auxFornecedor.setEndereco(fornecedor.getEndereco());
+				auxFornecedor.setDescricao(fornecedor.getDescricao());
+				
+			}
+			
+		}
 
 	}
 
 	@Override
 	public void removerFornecedor(Fornecedor fornecedor) {
-		// TODO Auto-generated method stub
+		
+			for (Fornecedor auxFornecedor : listFornecedor) {
+				
+				if (auxFornecedor.getCnpj() == 
+						fornecedor.getCnpj()) {
+					
+					listFornecedor.remove(auxFornecedor);
+					return;
+				}
+				
+			}
 
 	}
 

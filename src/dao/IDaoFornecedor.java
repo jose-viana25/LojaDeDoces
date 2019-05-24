@@ -8,7 +8,7 @@ public interface IDaoFornecedor {
 	
 	public void criarFornecedor(Fornecedor fornecedor);
 	
-	public void alterarFornecedor(Fornecedor fornecedor);
+	public void alterarFornecedor(Fornecedor fornecedorSelecionado,Fornecedor fornecedor);
 	
 	public List<Fornecedor> buscarFornecedor(Fornecedor fornecedor);
 	

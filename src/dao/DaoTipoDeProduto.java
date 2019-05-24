@@ -35,7 +35,8 @@ public class DaoTipoDeProduto implements IDaoTipoDeProduto {
 	}
 
 	private boolean temPadrao(TipoDeProduto tipoDeProduto, TipoDeProduto auxTipoDeProduto) {
-		return auxTipoDeProduto.getNome().toLowerCase().contains(
+		return auxTipoDeProduto.getCodigo() == tipoDeProduto.getCodigo()
+				&& auxTipoDeProduto.getNome().toLowerCase().contains(
 				tipoDeProduto.getNome().toLowerCase())
 				&& auxTipoDeProduto.getDescricao().toLowerCase().contains(
 						tipoDeProduto.getDescricao().toLowerCase());
@@ -68,7 +69,17 @@ public class DaoTipoDeProduto implements IDaoTipoDeProduto {
 
 	@Override
 	public void removerTipoDeProduto(TipoDeProduto tipoDeProduto) {
-		// TODO Auto-generated method stub
+		
+			for (TipoDeProduto auxTipoDeProduto : listTipoDeProduto) {
+				
+				if (auxTipoDeProduto.getCodigo() == 
+						tipoDeProduto.getCodigo()) {
+					
+					listTipoDeProduto.remove(auxTipoDeProduto);
+					return;
+				}
+				
+			}
 
 	}
 
