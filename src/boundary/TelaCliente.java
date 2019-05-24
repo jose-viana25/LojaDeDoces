@@ -1,5 +1,6 @@
 package boundary;
 
+import controller.CtrlCliente;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -7,9 +8,11 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import entity.Cliente;
+
 
 public class TelaCliente extends Application {
-
+	CtrlCliente ctrCliente = new CtrlCliente();
 	private AnchorPane pane;
 
 	private TextField txNome;
@@ -82,7 +85,15 @@ public class TelaCliente extends Application {
 	}
 
 	private void cadastrarCliente() {
-		// TODO Auto-generated method stub
+		Cliente cliente = new Cliente();
+		cliente.setNome(txNome.getText());
+		cliente.setEmail(txEmail.getText());
+		cliente.setCPF(txCPF.getText());
+		cliente.setTelefone(txTelefone.getText());
+		ctrCliente.cadastrarCliente(cliente);
+			limparCampos();
+		
+		
 
 	}
 
