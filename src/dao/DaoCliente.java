@@ -35,6 +35,13 @@ public class DaoCliente implements IDaoCliente{
     public void removerCliente(Cliente cliente){
 
     }
+      @Override
+	public List<Cliente> buscarTodosCliente() {
+		
+		return listCliente;
+		
+		
+	}
 
 
 
