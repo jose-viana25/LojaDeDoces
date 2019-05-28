@@ -3,7 +3,9 @@ package boundary;
 import java.util.ArrayList;
 import java.util.List;
 
+import controller.ControlException;
 import controller.CtrItensPedido;
+import controller.CtrProduto;
 import controller.CtrVenda;
 import entity.ItensPedido;
 import entity.Produto;
@@ -12,6 +14,7 @@ import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
@@ -25,10 +28,10 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 
-public class ManterVenda extends Application {
+public class ManterVenda /*extends Application*/ {
 
 	private CtrVenda ctrVenda = new CtrVenda();
-	// private CtrProduto ctrProduto = new CtrProduto();
+	private CtrProduto ctrProduto = new CtrProduto();
 	private CtrItensPedido ctrItensPedido = new CtrItensPedido();
 
 	private int codigoDaVendaSelecionada = -1;
@@ -59,15 +62,15 @@ public class ManterVenda extends Application {
 
 	private TableView<Venda> tableResultados;
 
-	public static void main(String[] args) {
+	/*public static void main(String[] args) {
 
 		launch(args);
 
-	}
+	}*/
 
-	@Override
-	public void start(Stage primaryStage) throws Exception {
-
+	//@Override
+	//public void start(Stage primaryStage) throws Exception {
+	public Node criarManterVenda() {
 		GridPane gridRoot = new GridPane();
 
 		GridPane grid = criarGridCadastro();
@@ -87,9 +90,10 @@ public class ManterVenda extends Application {
 		gridRoot.add(tableResultados, 0, 2);
 		gridRoot.add(hbBotoesTabela, 0, 3);
 
-		primaryStage.setTitle("Cadastrar Tipo de Produto");
+		return gridRoot;
+		/*primaryStage.setTitle("Cadastrar Venda");
 		primaryStage.setScene(new Scene(gridRoot));
-		primaryStage.show();
+		primaryStage.show();*/
 
 	}
 
@@ -183,7 +187,7 @@ public class ManterVenda extends Application {
 			Produto auxProduto =
 					cmbProdutos.getSelectionModel().getSelectedItem();
 			
-			itemPedido.setCodigo_produto(auxProduto.getCodigo());
+			itemPedido.setNome_produto(auxProduto.getNome());
 			itemPedido.setQuantidade(spQuantidade.getValue());
 			itemPedido.setValorUnitario(auxProduto.getValor());
 			listItensPedidosParaAdicionar.add(itemPedido);
@@ -207,13 +211,23 @@ public class ManterVenda extends Application {
 			venda.setCpf_funcionario(txtfCpf_funcionario.getText());
 			venda.setCpf_cliente(txtfCpf_cliente.getText());
 
-			ctrVenda.cadastrarVenda(venda);
+			try {
+				ctrVenda.cadastrarVenda(venda);
+			} catch (ControlException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
 			limparCampos();
 
 			tableResultados.getSelectionModel();
 
-			atualizarTabela(ctrVenda.pesquisarTodosVenda());
+			try {
+				atualizarTabela(ctrVenda.pesquisarTodosVenda());
+			} catch (ControlException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
 		});
 
@@ -224,7 +238,12 @@ public class ManterVenda extends Application {
 			venda.setCpf_funcionario(txtfCpf_funcionario.getText());
 			venda.setCpf_cliente(txtfCpf_cliente.getText());
 
-			atualizarTabela(ctrVenda.pesquisarVenda(venda));
+			try {
+				atualizarTabela(ctrVenda.pesquisarVenda(venda));
+			} catch (ControlException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
 		});
 
@@ -237,11 +256,21 @@ public class ManterVenda extends Application {
 			venda.setCpf_funcionario(txtfCpf_funcionario.getText());
 			venda.setCpf_cliente(txtfCpf_cliente.getText());
 
-			ctrVenda.mudarVenda(vendaSelecionado, venda);
+			try {
+				ctrVenda.mudarVenda(vendaSelecionado, venda);
+			} catch (ControlException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
 			limparCampos();
 
-			atualizarTabela(ctrVenda.pesquisarTodosVenda());
+			try {
+				atualizarTabela(ctrVenda.pesquisarTodosVenda());
+			} catch (ControlException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
 		});
 
@@ -253,9 +282,19 @@ public class ManterVenda extends Application {
 			venda.setCpf_funcionario(txtfCpf_funcionario.getText());
 			venda.setCpf_cliente(txtfCpf_cliente.getText());
 
-			ctrVenda.apagarVenda(venda);
+			try {
+				ctrVenda.apagarVenda(venda);
+			} catch (ControlException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
-			atualizarTabela(ctrVenda.pesquisarTodosVenda());
+			try {
+				atualizarTabela(ctrVenda.pesquisarTodosVenda());
+			} catch (ControlException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
 		});
 	}
@@ -281,7 +320,7 @@ public class ManterVenda extends Application {
 		tcCodigo.setCellValueFactory(new PropertyValueFactory<>("Codigo"));
 		tcCodigo.setPrefWidth(180);
 
-		TableColumn<Venda, String> tcCpf_funcionario = new TableColumn<>("Cpf_funcionario");
+		TableColumn<Venda, String> tcCpf_funcionario = new TableColumn<>("Cpf do funcionario");
 		tcCpf_funcionario.setCellValueFactory(new PropertyValueFactory<>("Cpf_funcionario"));
 		tcCpf_funcionario.setPrefWidth(180);
 

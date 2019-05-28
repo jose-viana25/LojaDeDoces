@@ -2,13 +2,13 @@ package boundary;
 
 import java.util.List;
 
+import controller.ControlException;
 import controller.CtrTipoDeProduto;
 import entity.TipoDeProduto;
-import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
-import javafx.scene.Scene;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
@@ -18,12 +18,9 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
-import javafx.stage.Stage;
 
-public class ManterTipoDeProduto extends Application {
+public class ManterTipoDeProduto /*extends Application*/ {
 
-	private int codigoDoTipoDeProdutoSelecionado = -1;
-	
 	private CtrTipoDeProduto ctrTipoDeProduto = new CtrTipoDeProduto();
 
 	private TextField txtfNome;
@@ -42,15 +39,18 @@ public class ManterTipoDeProduto extends Application {
 
 	private TableView<TipoDeProduto> tableResultados;
 
-	public static void main(String[] args) {
+	private TipoDeProduto tipoDeProdutoSelecionado;
+
+	/*public static void main(String[] args) {
 
 		launch(args);
 
-	}
+	}*/
 
-	@Override
-	public void start(Stage primaryStage) throws Exception {
-
+	//@Override
+	//public void start(Stage primaryStage) throws Exception {
+	public Node criarManterTipoDeProduto() {
+		
 		GridPane gridRoot = new GridPane();
 
 		GridPane grid = criarGridCadastro();
@@ -70,9 +70,10 @@ public class ManterTipoDeProduto extends Application {
 		gridRoot.add(tableResultados, 0, 2);
 		gridRoot.add(hbBotoesTabela, 0, 3);
 
-		primaryStage.setTitle("Cadastrar Tipo de Produto");
+		return gridRoot;
+		/*primaryStage.setTitle("Cadastrar Tipo de Produto");
 		primaryStage.setScene(new Scene(gridRoot));
-		primaryStage.show();
+		primaryStage.show();*/
 
 	}
 
@@ -80,13 +81,12 @@ public class ManterTipoDeProduto extends Application {
 		tableResultados.getSelectionModel().selectedItemProperty().addListener(
 				(event)->{
 					
-					TipoDeProduto tipoDeProduto = 
+					tipoDeProdutoSelecionado = 
 							tableResultados.getSelectionModel().getSelectedItem();
 					
-					if (tipoDeProduto != null) {
-						codigoDoTipoDeProdutoSelecionado = tipoDeProduto.getCodigo();
-						txtfNome.setText(tipoDeProduto.getNome());
-						txtaDescricao.setText(tipoDeProduto.getDescricao());
+					if (tipoDeProdutoSelecionado != null) {
+						txtfNome.setText(tipoDeProdutoSelecionado.getNome());
+						txtaDescricao.setText(tipoDeProdutoSelecionado.getDescricao());
 					}
 					
 					
@@ -149,13 +149,21 @@ public class ManterTipoDeProduto extends Application {
 			tipoDeProduto.setNome(txtfNome.getText());
 			tipoDeProduto.setDescricao(txtaDescricao.getText());
 
-			ctrTipoDeProduto.cadastrarTipoDeProduto(tipoDeProduto);
+			try {
+				ctrTipoDeProduto.cadastrarTipoDeProduto(tipoDeProduto);
+			} catch (ControlException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
 			limparCampos();
 
-			tableResultados.getSelectionModel();
-
-			atualizarTabela(ctrTipoDeProduto.pesquisarTodosTipoDeProduto());
+			try {
+				atualizarTabela(ctrTipoDeProduto.pesquisarTodosTipoDeProduto());
+			} catch (ControlException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
 		});
 
@@ -166,13 +174,18 @@ public class ManterTipoDeProduto extends Application {
 			tipoDeProduto.setNome(txtfNome.getText());
 			tipoDeProduto.setDescricao(txtaDescricao.getText());
 
-			atualizarTabela(ctrTipoDeProduto.pesquisarTipoDeProduto(tipoDeProduto));
+			try {
+				atualizarTabela(ctrTipoDeProduto.pesquisarTipoDeProduto(tipoDeProduto));
+			} catch (ControlException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
 		});
 
 		btnAlterar.setOnAction((event) -> {
 
-			TipoDeProduto tipoDeProdutoSelecionado = 
+			tipoDeProdutoSelecionado = 
 					tableResultados.getSelectionModel().getSelectedItem();
 
 			TipoDeProduto tipoDeProduto = new TipoDeProduto();
@@ -180,11 +193,21 @@ public class ManterTipoDeProduto extends Application {
 			tipoDeProduto.setNome(txtfNome.getText());
 			tipoDeProduto.setDescricao(txtaDescricao.getText());
 
-			ctrTipoDeProduto.mudarTipoDeProduto(tipoDeProdutoSelecionado, tipoDeProduto);
+			try {
+				ctrTipoDeProduto.mudarTipoDeProduto(tipoDeProdutoSelecionado, tipoDeProduto);
+			} catch (ControlException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
 			limparCampos();
 
-			atualizarTabela(ctrTipoDeProduto.pesquisarTodosTipoDeProduto());
+			try {
+				atualizarTabela(ctrTipoDeProduto.pesquisarTodosTipoDeProduto());
+			} catch (ControlException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
 		});
 		
@@ -192,13 +215,22 @@ public class ManterTipoDeProduto extends Application {
 			
 			TipoDeProduto tipoDeProduto = new TipoDeProduto();
 			
-			tipoDeProduto.setCodigo(codigoDoTipoDeProdutoSelecionado);
 			tipoDeProduto.setNome(txtfNome.getText());
 			tipoDeProduto.setDescricao(txtaDescricao.getText());
 			
-			ctrTipoDeProduto.apagarTipoDeProduto(tipoDeProduto);
+			try {
+				ctrTipoDeProduto.apagarTipoDeProduto(tipoDeProduto);
+			} catch (ControlException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			
-			atualizarTabela(ctrTipoDeProduto.pesquisarTodosTipoDeProduto());
+			try {
+				atualizarTabela(ctrTipoDeProduto.pesquisarTodosTipoDeProduto());
+			} catch (ControlException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			
 		});
 	}
@@ -220,10 +252,6 @@ public class ManterTipoDeProduto extends Application {
 
 		tableResultados = new TableView<>(olItens);
 
-		TableColumn<TipoDeProduto, Integer> tcCodigo = new TableColumn<>("Código");
-		tcCodigo.setCellValueFactory(new PropertyValueFactory<>("Codigo"));
-		tcCodigo.setPrefWidth(180);
-
 		TableColumn<TipoDeProduto, String> tcNome = new TableColumn<>("Nome");
 		tcNome.setCellValueFactory(new PropertyValueFactory<>("Nome"));
 		tcNome.setPrefWidth(180);
@@ -232,7 +260,6 @@ public class ManterTipoDeProduto extends Application {
 		tcDescricao.setCellValueFactory(new PropertyValueFactory<>("Descricao"));
 		tcDescricao.setPrefWidth(180);
 
-		tableResultados.getColumns().add(tcCodigo);
 		tableResultados.getColumns().add(tcNome);
 		tableResultados.getColumns().add(tcDescricao);
 

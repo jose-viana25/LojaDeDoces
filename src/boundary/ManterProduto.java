@@ -2,20 +2,21 @@ package boundary;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import controller.ControlException;
 import controller.CtrFornecedor;
 import controller.CtrProduto;
 import controller.CtrTipoDeProduto;
 import entity.Fornecedor;
 import entity.Produto;
 import entity.TipoDeProduto;
-import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
-import javafx.scene.Scene;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
@@ -26,12 +27,13 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
-import javafx.stage.Stage;
 
-public class ManterProduto extends Application {
+public class ManterProduto {
 
-	private int codigoDoProdutoSelecionado = -1;
-
+	private List<Fornecedor> listFornecedores;
+	
+	private List<TipoDeProduto> listTipoDeProduto;
+	
 	private CtrProduto ctrProduto = new CtrProduto();
 
 	private CtrFornecedor ctrFornecedor = new CtrFornecedor();
@@ -43,12 +45,12 @@ public class ManterProduto extends Application {
 	private Spinner<Integer> spQuantidadeEmEstoque;
 
 	private TextField txtfValor;
-	
+
 	private TextField txtfValidade;
 
-	private ComboBox<Fornecedor> cmbFornecedores;
+	private ComboBox<String> cmbFornecedores;
 
-	private ComboBox<TipoDeProduto> cmbTiposDeProdutos;
+	private ComboBox<String> cmbTiposDeProdutos;
 
 	private Button btnLimpar;
 
@@ -62,15 +64,11 @@ public class ManterProduto extends Application {
 
 	private TableView<Produto> tableResultados;
 
-	public static void main(String[] args) {
+	private Produto produtoSelecionado;
 
-		launch(args);
-
-	}
-
-	@Override
-	public void start(Stage primaryStage) throws Exception {
-
+	
+	public Node criarManterProduto() {
+		
 		GridPane gridRoot = new GridPane();
 
 		GridPane grid = criarGridCadastro();
@@ -90,36 +88,37 @@ public class ManterProduto extends Application {
 		gridRoot.add(tableResultados, 0, 2);
 		gridRoot.add(hbBotoesTabela, 0, 3);
 
-		primaryStage.setTitle("Cadastrar Tipo de Produto");
-		primaryStage.setScene(new Scene(gridRoot));
-		primaryStage.show();
+		return gridRoot;
 
 	}
 
 	private void definirAcaoTabela() {
 		tableResultados.getSelectionModel().selectedItemProperty().addListener((event) -> {
 
-			Produto produto = tableResultados.getSelectionModel().getSelectedItem();
+			produtoSelecionado = tableResultados.getSelectionModel().getSelectedItem();
 
-			if (produto != null) {
-				codigoDoProdutoSelecionado = produto.getCodigo();
-				txtfNome.setText(produto.getNome());
-				txtfValidade.setText(converterDataParaTexto(
-						produto.getValidade()));
-				spQuantidadeEmEstoque.getValueFactory().setValue(
-						produto.getQuantidadeEmEstoque());
-				
+			if (produtoSelecionado != null) {
+				txtfNome.setText(produtoSelecionado.getNome());
+				txtfValidade.setText(converterDataParaTexto(produtoSelecionado.getValidade()));
+				spQuantidadeEmEstoque.getValueFactory().setValue(produtoSelecionado.getQuantidadeEmEstoque());
+
 				TipoDeProduto auxTipoDeProduto = new TipoDeProduto();
-				auxTipoDeProduto.setCodigo(produto.getCodigo_tipo());
-				cmbTiposDeProdutos.getSelectionModel().select(
-						ctrTipoDeProduto.pesquisarTipoDeProduto(
-								auxTipoDeProduto).get(0));
 				
+				
+				cmbTiposDeProdutos.getSelectionModel().select(
+						listTipoDeProduto.indexOf(auxTipoDeProduto));
+
 				Fornecedor auxFornecedor = new Fornecedor();
-				auxFornecedor.setCnpj(produto.getCnpj_fornecedor());
+				auxFornecedor.setCnpj(produtoSelecionado.getCnpj_fornecedor());
+				try {
+					auxFornecedor = ctrFornecedor.pesquisarFornecedor(
+							auxFornecedor).get(0);
+				} catch (ControlException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				cmbFornecedores.getSelectionModel().select(
-						ctrFornecedor.pesquisarFornecedor(
-								auxFornecedor).get(0));
+						listFornecedores.indexOf(auxFornecedor));
 			}
 
 		});
@@ -131,17 +130,13 @@ public class ManterProduto extends Application {
 		return sdf.format(data);
 	}
 
-	private Date converterTextoParaData(String data) {
+	private Date converterTextoParaData(String data) throws ParseException {
 
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-		Date novaData = null; 
-		try {
-			novaData = sdf.parse(data);
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		Date novaData = null;
 		
+		novaData = sdf.parse(data);
+
 		return novaData;
 	}
 
@@ -149,18 +144,45 @@ public class ManterProduto extends Application {
 		GridPane grid = new GridPane();
 
 		txtfNome = new TextField();
-		spQuantidadeEmEstoque = new Spinner<>();
+		spQuantidadeEmEstoque = new Spinner<>(0, 100, 0);
+		spQuantidadeEmEstoque.setEditable(true);
 		txtfValidade = new TextField();
 		txtfValor = new TextField();
+
+		try {
+			listTipoDeProduto = ctrTipoDeProduto.pesquisarTodosTipoDeProduto();
+			listFornecedores = ctrFornecedor.pesquisarTodosFornecedor();
+		} catch (ControlException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		
-		//converter tipo de produto para String
-		ObservableList<TipoDeProduto> olTiposDeProdutos = FXCollections
-				.observableArrayList(ctrTipoDeProduto.pesquisarTodosTipoDeProduto());
+		
+		// converter tipo de produto para String
+		try {
+			listTipoDeProduto = ctrTipoDeProduto.pesquisarTodosTipoDeProduto();
+		} catch (ControlException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		ObservableList<String> olTiposDeProdutos = 
+				FXCollections.observableArrayList(
+						listTipoDeProdutoParaString(listTipoDeProduto));
 		cmbTiposDeProdutos = new ComboBox<>(olTiposDeProdutos);
 
-		//converter fornecedor para String
-		ObservableList<Fornecedor> olFornecedores = FXCollections
-				.observableArrayList(ctrFornecedor.pesquisarTodosFornecedor());
+		// converter fornecedor para String
+		try {
+			listFornecedores = ctrFornecedor.pesquisarTodosFornecedor();
+		} catch (ControlException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+		ObservableList<String> olFornecedores = FXCollections
+				.observableArrayList(
+						listFornecedorParaString(listFornecedores));
 		cmbFornecedores = new ComboBox<>(olFornecedores);
 
 		grid.add(new Label("Nome:"), 0, 0);
@@ -176,6 +198,28 @@ public class ManterProduto extends Application {
 		grid.add(new Label("Fornecedor:"), 0, 5);
 		grid.add(cmbFornecedores, 1, 5);
 		return grid;
+	}
+
+	private List<String> listTipoDeProdutoParaString(List<TipoDeProduto> pesquisarTodosTipoDeProduto) {
+
+		List<String> listaTipoDeProduto = new ArrayList<>();
+
+		for (TipoDeProduto tipoDeProduto : pesquisarTodosTipoDeProduto) {
+			listaTipoDeProduto.add(tipoDeProduto.getNome());
+		}
+
+		return listaTipoDeProduto;
+	}
+
+	private List<String> listFornecedorParaString(List<Fornecedor> pesquisarTodosFornecedor) {
+
+		List<String> listaTipoDeProduto = new ArrayList<>();
+
+		for (Fornecedor fornecedor : pesquisarTodosFornecedor) {
+			listaTipoDeProduto.add(fornecedor.getNome());
+		}
+
+		return listaTipoDeProduto;
 	}
 
 	private HBox criarHboxBotoesTabela() {
@@ -220,19 +264,38 @@ public class ManterProduto extends Application {
 			produto.setNome(txtfNome.getText());
 			produto.setQuantidadeEmEstoque(spQuantidadeEmEstoque.getValue());
 			produto.setValor(Double.parseDouble(txtfValor.getText()));
-			produto.setValidade(converterTextoParaData(txtfValidade.getText()));
-			produto.setCnpj_fornecedor(
-					cmbFornecedores.getSelectionModel().getSelectedItem().getCnpj());
-			produto.setCodigo_tipo(
-					cmbTiposDeProdutos.getSelectionModel().getSelectedItem().getCodigo());
+			try {
+				produto.setValidade(converterTextoParaData(txtfValidade.getText()));
+			} catch (ParseException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 			
-			ctrProduto.cadastrarProduto(produto);
+			Fornecedor auxFornecedor = listFornecedores.get(
+					cmbFornecedores.getSelectionModel().getSelectedIndex());
+			
+			produto.setCnpj_fornecedor(auxFornecedor.getCnpj());
+			
+			TipoDeProduto auxTipoDeProduto = listTipoDeProduto.get(
+					cmbFornecedores.getSelectionModel().getSelectedIndex());
+			
+			produto.setNome_tipoDeProduto(auxTipoDeProduto.getNome());
+
+			try {
+				ctrProduto.cadastrarProduto(produto);
+			} catch (ControlException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
 			limparCampos();
 
-			tableResultados.getSelectionModel();
-
-			atualizarTabela(ctrProduto.pesquisarTodosProduto());
+			try {
+				atualizarTabela(ctrProduto.pesquisarTodosProduto());
+			} catch (ControlException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
 		});
 
@@ -242,37 +305,80 @@ public class ManterProduto extends Application {
 
 			produto.setNome(txtfNome.getText());
 			produto.setQuantidadeEmEstoque(spQuantidadeEmEstoque.getValue());
-			produto.setValor(Double.parseDouble(txtfValor.getText()));
-			produto.setValidade(converterTextoParaData(txtfValidade.getText()));
-			produto.setCnpj_fornecedor(
-					cmbFornecedores.getSelectionModel().getSelectedItem().getCnpj());
-			produto.setCodigo_tipo(
-					cmbTiposDeProdutos.getSelectionModel().getSelectedItem().getCodigo());
-
-			atualizarTabela(ctrProduto.pesquisarProduto(produto));
+			try {
+				produto.setValor(Double.parseDouble(txtfValor.getText()));
+			} catch (NumberFormatException e2) {
+				produto.setValor(0);
+			}
+			try {
+				produto.setValidade(converterTextoParaData(txtfValidade.getText()));
+			} catch (ParseException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+				produto.setValidade(new Date());
+			}
+			
+			Fornecedor auxFornecedor = listFornecedores.get(
+					cmbFornecedores.getSelectionModel().getSelectedIndex());
+			
+			System.out.println("Forncedor:" + auxFornecedor.toString());
+			produto.setCnpj_fornecedor(auxFornecedor.getCnpj());
+			
+			TipoDeProduto auxTipoDeProduto = listTipoDeProduto.get(
+					cmbFornecedores.getSelectionModel().getSelectedIndex());
+			
+			System.out.println("Tipo:" + auxTipoDeProduto.toString());
+			produto.setNome_tipoDeProduto(auxTipoDeProduto.getNome());
+			try {
+				atualizarTabela(ctrProduto.pesquisarProduto(produto));
+			} catch (ControlException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
 		});
 
 		btnAlterar.setOnAction((event) -> {
 
-			Produto produtoSelecionado = tableResultados.getSelectionModel().getSelectedItem();
+			produtoSelecionado = tableResultados.getSelectionModel().getSelectedItem();
 
 			Produto produto = new Produto();
 
 			produto.setNome(txtfNome.getText());
 			produto.setQuantidadeEmEstoque(spQuantidadeEmEstoque.getValue());
 			produto.setValor(Double.parseDouble(txtfValor.getText()));
-			produto.setValidade(converterTextoParaData(txtfValidade.getText()));
-			produto.setCnpj_fornecedor(
-					cmbFornecedores.getSelectionModel().getSelectedItem().getCnpj());
-			produto.setCodigo_tipo(
-					cmbTiposDeProdutos.getSelectionModel().getSelectedItem().getCodigo());
+			try {
+				produto.setValidade(converterTextoParaData(txtfValidade.getText()));
+			} catch (ParseException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+				produto.setValidade(new Date());
+			}
+			
+			Fornecedor auxFornecedor = listFornecedores.get(
+					cmbFornecedores.getSelectionModel().getSelectedIndex());
+			
+			produto.setCnpj_fornecedor(auxFornecedor.getCnpj());
+			
+			TipoDeProduto auxTipoDeProduto = listTipoDeProduto.get(
+					cmbFornecedores.getSelectionModel().getSelectedIndex());
 
-			ctrProduto.mudarProduto(produtoSelecionado, produto);
+			produto.setNome_tipoDeProduto(auxTipoDeProduto.getNome());
+			try {
+				ctrProduto.mudarProduto(produtoSelecionado, produto);
+			} catch (ControlException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
 			limparCampos();
 
-			atualizarTabela(ctrProduto.pesquisarTodosProduto());
+			try {
+				atualizarTabela(ctrProduto.pesquisarTodosProduto());
+			} catch (ControlException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
 		});
 
@@ -280,24 +386,52 @@ public class ManterProduto extends Application {
 
 			Produto produto = new Produto();
 
-			produto.setCodigo(codigoDoProdutoSelecionado);
 			produto.setNome(txtfNome.getText());
 			produto.setQuantidadeEmEstoque(spQuantidadeEmEstoque.getValue());
 			produto.setValor(Double.parseDouble(txtfValor.getText()));
-			produto.setValidade(converterTextoParaData(txtfValidade.getText()));
-			produto.setCnpj_fornecedor(
-					cmbFornecedores.getSelectionModel().getSelectedItem().getCnpj());
-			produto.setCodigo_tipo(
-					cmbTiposDeProdutos.getSelectionModel().getSelectedItem().getCodigo());
+			try {
+				produto.setValidade(converterTextoParaData(txtfValidade.getText()));
+			} catch (ParseException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+				produto.setValidade(new Date());
+			}
+			
+			Fornecedor auxFornecedor = listFornecedores.get(
+					cmbFornecedores.getSelectionModel().getSelectedIndex());
+			
+			produto.setCnpj_fornecedor(auxFornecedor.getCnpj());
+			
+			TipoDeProduto auxTipoDeProduto = listTipoDeProduto.get(
+					cmbFornecedores.getSelectionModel().getSelectedIndex());
 
-			ctrProduto.apagarProduto(produto);
+			produto.setNome_tipoDeProduto(auxTipoDeProduto.getNome());
+			try {
+				ctrProduto.apagarProduto(produto);
+			} catch (ControlException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
-			atualizarTabela(ctrProduto.pesquisarTodosProduto());
+			try {
+				atualizarTabela(ctrProduto.pesquisarTodosProduto());
+			} catch (ControlException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
 		});
 	}
 
 	private void atualizarTabela(List<Produto> listProdutos) {
+		try {
+			listTipoDeProduto = ctrTipoDeProduto.pesquisarTodosTipoDeProduto();
+			listFornecedores = ctrFornecedor.pesquisarTodosFornecedor();
+		} catch (ControlException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		ObservableList<Produto> olItens = FXCollections.observableArrayList(listProdutos);
 		tableResultados.setItems(olItens);
 		tableResultados.refresh();
@@ -314,10 +448,6 @@ public class ManterProduto extends Application {
 
 		tableResultados = new TableView<>(olItens);
 
-		TableColumn<Produto, Integer> tcCodigo = new TableColumn<>("Código");
-		tcCodigo.setCellValueFactory(new PropertyValueFactory<>("Codigo"));
-		tcCodigo.setPrefWidth(180);
-
 		TableColumn<Produto, String> tcNome = new TableColumn<>("Nome");
 		tcNome.setCellValueFactory(new PropertyValueFactory<>("Nome"));
 		tcNome.setPrefWidth(180);
@@ -325,20 +455,15 @@ public class ManterProduto extends Application {
 		TableColumn<Produto, Date> tcValidade = new TableColumn<>("Validade");
 		tcValidade.setCellValueFactory(new PropertyValueFactory<>("Validade"));
 		tcValidade.setPrefWidth(180);
-		
+
 		TableColumn<Produto, Date> tcValor = new TableColumn<>("Valor");
 		tcValor.setCellValueFactory(new PropertyValueFactory<>("Valor"));
 		tcValor.setPrefWidth(180);
-		
-		TableColumn<Produto, Date> tcQuantidadeEmEstoque = 
-				new TableColumn<>("Quantidade:");
-		tcQuantidadeEmEstoque.setCellValueFactory(
-				new PropertyValueFactory<>("QuantidadeEmEstoque"));
-		tcQuantidadeEmEstoque.setPrefWidth(180);
-		
-		
 
-		tableResultados.getColumns().add(tcCodigo);
+		TableColumn<Produto, Date> tcQuantidadeEmEstoque = new TableColumn<>("Quantidade:");
+		tcQuantidadeEmEstoque.setCellValueFactory(new PropertyValueFactory<>("QuantidadeEmEstoque"));
+		tcQuantidadeEmEstoque.setPrefWidth(180);
+
 		tableResultados.getColumns().add(tcNome);
 		tableResultados.getColumns().add(tcValor);
 		tableResultados.getColumns().add(tcValidade);

@@ -6,14 +6,14 @@ import entity.Venda;
 
 public interface IDaoVenda {
 	
-	public void criarVenda(Venda venda);
+	public void criarVenda(Venda venda) throws DaoException;
 	
-	public void alterarVenda(Venda vendaSelecionado,Venda venda);
+	public void alterarVenda(Venda vendaSelecionado,Venda venda) throws DaoException;
 	
-	public List<Venda> buscarVenda(Venda venda);
+	public List<Venda> buscarVenda(Venda venda) throws DaoException;
 	
-	public List<Venda> buscarTodosVenda();
+	public List<Venda> buscarTodosVenda() throws DaoException;
 	
-	public void removerVenda(Venda venda);
+	public void removerVenda(Venda venda) throws DaoException;
 	
 }

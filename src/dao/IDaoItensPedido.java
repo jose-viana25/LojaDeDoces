@@ -6,14 +6,14 @@ import entity.ItensPedido;
 
 public interface IDaoItensPedido {
 	
-	public void criarItensPedido(ItensPedido itensPedido);
+	public void criarItensPedido(ItensPedido itensPedido) throws DaoException;
 	
-	public void alterarItensPedido(ItensPedido itensPedidoSelecionado,ItensPedido itensPedido);
+	public void alterarItensPedido(ItensPedido itensPedidoSelecionado,ItensPedido itensPedido) throws DaoException;
 	
-	public List<ItensPedido> buscarItensPedido(ItensPedido itensPedido);
+	public List<ItensPedido> buscarItensPedido(ItensPedido itensPedido) throws DaoException;
 	
-	public List<ItensPedido> buscarTodosItensPedido();
+	public List<ItensPedido> buscarTodosItensPedido() throws DaoException;
 	
-	public void removerItensPedido(ItensPedido itensPedido);
+	public void removerItensPedido(ItensPedido itensPedido) throws DaoException;
 	
 }

@@ -4,27 +4,28 @@ import java.util.Date;
 
 public class Produto {
 	
-	private int codigo;
-	private int codigo_tipo;
+	
 	private double valor;
 	private int quantidadeEmEstoque;
 	private Date validade;
-	private String nome;
+	private String nome; //primary key
+	private String nome_tipoDeProduto;
 	private String cnpj_fornecedor;
 	
 	
+	public String getNome_tipoDeProduto() {
+		return nome_tipoDeProduto;
+	}
+	public void setNome_tipoDeProduto(String nome_tipo) {
+		this.nome_tipoDeProduto = nome_tipo;
+	}
 	public double getValor() {
 		return valor;
 	}
 	public void setValor(double valor) {
 		this.valor = valor;
 	}
-	public int getCodigo() {
-		return codigo;
-	}
-	public void setCodigo(int codigo) {
-		this.codigo = codigo;
-	}
+	
 	public String getNome() {
 		return nome;
 	}
@@ -49,12 +50,7 @@ public class Produto {
 	public void setCnpj_fornecedor(String codigo_fornecedor) {
 		this.cnpj_fornecedor = codigo_fornecedor;
 	}
-	public int getCodigo_tipo() {
-		return codigo_tipo;
-	}
-	public void setCodigo_tipo(int codigo_tipo) {
-		this.codigo_tipo = codigo_tipo;
-	}
+	
 	
 	
 	

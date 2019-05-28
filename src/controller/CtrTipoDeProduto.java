@@ -2,6 +2,7 @@ package controller;
 
 import java.util.List;
 
+import dao.DaoException;
 import dao.DaoTipoDeProduto;
 import dao.IDaoTipoDeProduto;
 import entity.TipoDeProduto;
@@ -10,31 +11,58 @@ public class CtrTipoDeProduto {
 
 	IDaoTipoDeProduto daoTipoDeProduto = new DaoTipoDeProduto();
 
-	public void cadastrarTipoDeProduto(TipoDeProduto tipoDeProduto) {
-		daoTipoDeProduto.criarTipoDeProduto(tipoDeProduto);
+	public void cadastrarTipoDeProduto(TipoDeProduto tipoDeProduto) throws ControlException {
+		try {
+			daoTipoDeProduto.criarTipoDeProduto(tipoDeProduto);
+		} catch (DaoException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	public void mudarTipoDeProduto(TipoDeProduto tipoDeProdutoSelecionado,
-			TipoDeProduto tipoDeProduto) {
+			TipoDeProduto tipoDeProduto) throws ControlException {
 		
-		daoTipoDeProduto.alterarTipoDeProduto(tipoDeProdutoSelecionado,
-				tipoDeProduto);
+		try {
+			daoTipoDeProduto.alterarTipoDeProduto(tipoDeProdutoSelecionado,
+					tipoDeProduto);
+		} catch (DaoException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 	}
 	
-	public List<TipoDeProduto> pesquisarTipoDeProduto(TipoDeProduto tipoDeProduto) {
+	public List<TipoDeProduto> pesquisarTipoDeProduto(TipoDeProduto tipoDeProduto) throws ControlException {
 
-		return daoTipoDeProduto.buscarTipoDeProduto(tipoDeProduto);
+		try {
+			return daoTipoDeProduto.buscarTipoDeProduto(tipoDeProduto);
+		} catch (DaoException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
 	}
 
-	public List<TipoDeProduto> pesquisarTodosTipoDeProduto() {
+	public List<TipoDeProduto> pesquisarTodosTipoDeProduto() throws ControlException {
 
-		return daoTipoDeProduto.buscarTodosTipoDeProduto();
+		try {
+			return daoTipoDeProduto.buscarTodosTipoDeProduto();
+		} catch (DaoException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
 	}
 	
-	public void apagarTipoDeProduto(TipoDeProduto tipoDeProduto) {
+	public void apagarTipoDeProduto(TipoDeProduto tipoDeProduto) throws ControlException {
 		
-		daoTipoDeProduto.removerTipoDeProduto(tipoDeProduto);
+		try {
+			daoTipoDeProduto.removerTipoDeProduto(tipoDeProduto);
+		} catch (DaoException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 	}
 

@@ -2,6 +2,7 @@ package controller;
 
 import java.util.List;
 
+import dao.DaoException;
 import dao.DaoFornecedor;
 import dao.IDaoFornecedor;
 import entity.Fornecedor;
@@ -10,31 +11,60 @@ public class CtrFornecedor {
 
 	IDaoFornecedor daoFornecedor = new DaoFornecedor();
 
-	public void cadastrarFornecedor(Fornecedor fornecedor) {
-		daoFornecedor.criarFornecedor(fornecedor);
+	public void cadastrarFornecedor(Fornecedor fornecedor) throws ControlException {
+		try {
+			daoFornecedor.criarFornecedor(fornecedor);
+		} catch (DaoException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	public void mudarFornecedor(Fornecedor fornecedorSelecionado,
-			Fornecedor fornecedor) {
+			Fornecedor fornecedor) throws ControlException {
 		
-		daoFornecedor.alterarFornecedor(fornecedorSelecionado,
-				fornecedor);
+		try {
+			daoFornecedor.alterarFornecedor(fornecedorSelecionado,
+					fornecedor);
+		} catch (DaoException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 	}
 	
-	public List<Fornecedor> pesquisarFornecedor(Fornecedor fornecedor) {
+	public List<Fornecedor> pesquisarFornecedor(Fornecedor fornecedor) throws ControlException {
 
-		return daoFornecedor.buscarFornecedor(fornecedor);
+		try {
+			return daoFornecedor.buscarFornecedor(fornecedor);
+		} catch (DaoException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
 	}
 
-	public List<Fornecedor> pesquisarTodosFornecedor() {
+	public List<Fornecedor> pesquisarTodosFornecedor() throws ControlException {
 
-		return daoFornecedor.buscarTodosFornecedor();
+		try {
+			return daoFornecedor.buscarTodosFornecedor();
+		} catch (DaoException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return null;
 	}
 	
-	public void apagarFornecedor(Fornecedor fornecedor) {
+	public void apagarFornecedor(Fornecedor fornecedor) throws ControlException {
 		
-		daoFornecedor.removerFornecedor(fornecedor);
+		try {
+			daoFornecedor.removerFornecedor(fornecedor);
+		} catch (DaoException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		
 	}
 

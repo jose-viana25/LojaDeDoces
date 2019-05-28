@@ -13,7 +13,7 @@ public class DaoItensPedido implements IDaoItensPedido {
 	public void criarItensPedido(ItensPedido itensPedido) {
 
 		itensPedido.setCodigo_venda(itensPedido.getCodigo_venda());
-		itensPedido.setCodigo_produto(itensPedido.getCodigo_produto());
+		itensPedido.setNome_produto(itensPedido.getNome_produto());
 		itensPedido.setQuantidade(itensPedido.getQuantidade());
 		itensPedido.setValorUnitario(itensPedido.getValorUnitario());
 		listItensPedido.add(itensPedido);
@@ -39,8 +39,8 @@ public class DaoItensPedido implements IDaoItensPedido {
 	private boolean temPadrao(ItensPedido itensPedido, ItensPedido auxItensPedido) {
 		return auxItensPedido.getCodigo_venda() == 
 					itensPedido.getCodigo_venda()
-				&& auxItensPedido.getCodigo_produto() == 
-					itensPedido.getCodigo_produto()
+				&& auxItensPedido.getNome_produto() == 
+					itensPedido.getNome_produto()
 				&& auxItensPedido.getQuantidade() == 
 					itensPedido.getQuantidade()
 				&& auxItensPedido.getValorUnitario() == 
@@ -62,8 +62,8 @@ public class DaoItensPedido implements IDaoItensPedido {
 			
 			if (auxItensPedido.getCodigo_venda() == 
 					itensPedidoSelecionado.getCodigo_venda()
-					&& auxItensPedido.getCodigo_produto() == 
-							itensPedidoSelecionado.getCodigo_produto()) {
+					&& auxItensPedido.getNome_produto() == 
+							itensPedidoSelecionado.getNome_produto()) {
 				
 				itensPedido.setQuantidade(itensPedido.getQuantidade());
 				itensPedido.setValorUnitario(itensPedido.getValorUnitario());
@@ -81,8 +81,8 @@ public class DaoItensPedido implements IDaoItensPedido {
 				
 				if (auxItensPedido.getCodigo_venda() == 
 						itensPedido.getCodigo_venda()
-						&& auxItensPedido.getCodigo_produto() == 
-								itensPedido.getCodigo_produto()) {
+						&& auxItensPedido.getNome_produto() == 
+								itensPedido.getNome_produto()) {
 					
 					listItensPedido.remove(auxItensPedido);
 					return;

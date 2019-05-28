@@ -2,13 +2,13 @@ package boundary;
 
 import java.util.List;
 
+import controller.ControlException;
 import controller.CtrFornecedor;
 import entity.Fornecedor;
-import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
-import javafx.scene.Scene;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
@@ -18,9 +18,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
-import javafx.stage.Stage;
 
-public class ManterFornecedor extends Application {
+public class ManterFornecedor {
 
 	private CtrFornecedor ctrFornecedor = new CtrFornecedor();
 
@@ -42,17 +41,14 @@ public class ManterFornecedor extends Application {
 
 	private Button btnRemover;
 
+	
 	private TableView<Fornecedor> tableResultados;
 
-	public static void main(String[] args) {
+	private Fornecedor fornecedorSelecionado;
 
-		launch(args);
+	
 
-	}
-
-	@Override
-	public void start(Stage primaryStage) throws Exception {
-
+	public Node criarManterFornecedor() {
 		GridPane gridRoot = new GridPane();
 
 		GridPane grid = criarGridCadastro();
@@ -71,10 +67,9 @@ public class ManterFornecedor extends Application {
 		gridRoot.add(hbBotoesCadastro, 0, 1);
 		gridRoot.add(tableResultados, 0, 2);
 		gridRoot.add(hbBotoesTabela, 0, 3);
+		
+		return gridRoot;
 
-		primaryStage.setTitle("Cadastrar Tipo de Produto");
-		primaryStage.setScene(new Scene(gridRoot));
-		primaryStage.show();
 
 	}
 
@@ -82,14 +77,13 @@ public class ManterFornecedor extends Application {
 		tableResultados.getSelectionModel().selectedItemProperty().addListener(
 				(event)->{
 					
-					Fornecedor fornecedor = 
-							tableResultados.getSelectionModel().getSelectedItem();
+					fornecedorSelecionado = tableResultados.getSelectionModel().getSelectedItem();
 					
-					if (fornecedor != null) {
-						txtfCnpj.setText(fornecedor.getCnpj());
-						txtfNome.setText(fornecedor.getNome());
-						txtfEndereco.setText(fornecedor.getEndereco());
-						txtaDescricao.setText(fornecedor.getDescricao());
+					if (fornecedorSelecionado != null) {
+						txtfCnpj.setText(fornecedorSelecionado.getCnpj());
+						txtfNome.setText(fornecedorSelecionado.getNome());
+						txtfEndereco.setText(fornecedorSelecionado.getEndereco());
+						txtaDescricao.setText(fornecedorSelecionado.getDescricao());
 					}
 					
 					
@@ -160,16 +154,27 @@ public class ManterFornecedor extends Application {
 			fornecedor.setEndereco(txtfEndereco.getText());
 			fornecedor.setDescricao(txtaDescricao.getText());
 
-			ctrFornecedor.cadastrarFornecedor(fornecedor);
+			try {
+				ctrFornecedor.cadastrarFornecedor(fornecedor);
+			} catch (ControlException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
 			limparCampos();
 
 			tableResultados.getSelectionModel();
 
-			atualizarTabela(ctrFornecedor.pesquisarTodosFornecedor());
+			try {
+				atualizarTabela(ctrFornecedor.pesquisarTodosFornecedor());
+			} catch (ControlException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
 		});
 
+		//Isso
 		btnPesquisar.setOnAction((event) -> {
 
 			Fornecedor fornecedor = new Fornecedor();
@@ -179,13 +184,18 @@ public class ManterFornecedor extends Application {
 			fornecedor.setEndereco(txtfEndereco.getText());
 			fornecedor.setDescricao(txtaDescricao.getText());
 
-			atualizarTabela(ctrFornecedor.pesquisarFornecedor(fornecedor));
+			try {
+				atualizarTabela(ctrFornecedor.pesquisarFornecedor(fornecedor));
+			} catch (ControlException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
 		});
 
 		btnAlterar.setOnAction((event) -> {
 
-			Fornecedor fornecedorSelecionado = 
+			fornecedorSelecionado = 
 					tableResultados.getSelectionModel().getSelectedItem();
 
 			Fornecedor fornecedor = new Fornecedor();
@@ -195,11 +205,21 @@ public class ManterFornecedor extends Application {
 			fornecedor.setEndereco(txtfEndereco.getText());
 			fornecedor.setDescricao(txtaDescricao.getText());
 
-			ctrFornecedor.mudarFornecedor(fornecedorSelecionado, fornecedor);
+			try {
+				ctrFornecedor.mudarFornecedor(fornecedorSelecionado, fornecedor);
+			} catch (ControlException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
 			limparCampos();
 
-			atualizarTabela(ctrFornecedor.pesquisarTodosFornecedor());
+			try {
+				atualizarTabela(ctrFornecedor.pesquisarTodosFornecedor());
+			} catch (ControlException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
 		});
 		
@@ -212,13 +232,24 @@ public class ManterFornecedor extends Application {
 			fornecedor.setEndereco(txtfEndereco.getText());
 			fornecedor.setDescricao(txtaDescricao.getText());
 			
-			ctrFornecedor.apagarFornecedor(fornecedor);
+			try {
+				ctrFornecedor.apagarFornecedor(fornecedor);
+			} catch (ControlException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			
-			atualizarTabela(ctrFornecedor.pesquisarTodosFornecedor());
+			try {
+				atualizarTabela(ctrFornecedor.pesquisarTodosFornecedor());
+			} catch (ControlException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			
 		});
 	}
 
+	
 	private void atualizarTabela(List<Fornecedor> listFornecedor) {
 		ObservableList<Fornecedor> olItens = FXCollections.observableArrayList(listFornecedor);
 		tableResultados.setItems(olItens);
@@ -232,6 +263,7 @@ public class ManterFornecedor extends Application {
 		txtaDescricao.setText("");
 	}
 
+	
 	private void criarTableView() {
 
 		ObservableList<Fornecedor> olItens = FXCollections.observableArrayList();
@@ -253,13 +285,13 @@ public class ManterFornecedor extends Application {
 		TableColumn<Fornecedor, String> tcDescricao = new TableColumn<>("Descrição");
 		tcDescricao.setCellValueFactory(new PropertyValueFactory<>("Descricao"));
 		tcDescricao.setPrefWidth(180);
-
+		
 		tableResultados.getColumns().add(tcCnpj);
 		tableResultados.getColumns().add(tcNome);
 		tableResultados.getColumns().add(tcEndereco);
 		tableResultados.getColumns().add(tcDescricao);
 
-		tableResultados.autosize();
+		tableResultados.setPrefHeight(200);
 
 
 	}

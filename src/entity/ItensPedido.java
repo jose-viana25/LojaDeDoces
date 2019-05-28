@@ -3,7 +3,7 @@ package entity;
 public class ItensPedido {
 	
 	private int codigo_venda;
-	private int codigo_produto;
+	private String nome_produto;
 	private int quantidade;
 	private double valorUnitario;
 	
@@ -13,11 +13,11 @@ public class ItensPedido {
 	public void setCodigo_venda(int codigo_venda) {
 		this.codigo_venda = codigo_venda;
 	}
-	public int getCodigo_produto() {
-		return codigo_produto;
+	public String getNome_produto() {
+		return nome_produto;
 	}
-	public void setCodigo_produto(int codigo_produto) {
-		this.codigo_produto = codigo_produto;
+	public void setNome_produto(String nome_produto) {
+		this.nome_produto = nome_produto;
 	}
 	public int getQuantidade() {
 		return quantidade;

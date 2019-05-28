@@ -8,14 +8,13 @@ import entity.Produto;
 public class DaoProduto implements IDaoProduto {
 
 	private List<Produto> listProduto = new ArrayList<>();
-	private int codigo_index = 0;
+	
 
 	@Override
 	public void criarProduto(Produto produto) {
 
-		produto.setCodigo(codigo_index);
 		listProduto.add(produto);
-		codigo_index++;
+		
 
 	}
 
@@ -41,9 +40,7 @@ public class DaoProduto implements IDaoProduto {
 						produto.getValidade())
 				&& auxProduto.getValor() == produto.getValor()
 				&& auxProduto.getCnpj_fornecedor().equals(
-						produto.getCnpj_fornecedor())
-				&& auxProduto.getCodigo_tipo() == 
-				produto.getCodigo_tipo();
+						produto.getCnpj_fornecedor());
 	}
 	
 	@Override
@@ -59,16 +56,16 @@ public class DaoProduto implements IDaoProduto {
 		
 		for (Produto auxProduto : listProduto) {
 			
-			if (auxProduto.getCodigo() == 
-					produtoSelecionado.getCodigo()) {
+			if (auxProduto.getNome() == 
+					produtoSelecionado.getNome()) {
 				
 				auxProduto.setNome(produto.getNome());
 				auxProduto.setValidade(produto.getValidade());
 				auxProduto.setValor(produto.getValor());
 				auxProduto.setCnpj_fornecedor(
 						produto.getCnpj_fornecedor());
-				auxProduto.setCodigo_tipo(
-						produto.getCodigo_tipo());
+				auxProduto.setNome_tipoDeProduto(
+						produto.getNome_tipoDeProduto());
 				
 			}
 			
@@ -81,8 +78,8 @@ public class DaoProduto implements IDaoProduto {
 		
 			for (Produto auxProduto : listProduto) {
 				
-				if (auxProduto.getCodigo() == 
-						produto.getCodigo()) {
+				if (auxProduto.getNome() == 
+						produto.getNome()) {
 					
 					listProduto.remove(auxProduto);
 					return;

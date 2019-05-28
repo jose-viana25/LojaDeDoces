@@ -6,14 +6,14 @@ import entity.TipoDeProduto;
 
 public interface IDaoTipoDeProduto {
 	
-	public void criarTipoDeProduto(TipoDeProduto tipoDeProduto);
+	public void criarTipoDeProduto(TipoDeProduto tipoDeProduto) throws DaoException;
 	
-	public void alterarTipoDeProduto(TipoDeProduto tipoDeProdutoSelecionado,TipoDeProduto tipoDeProduto);
+	public void alterarTipoDeProduto(TipoDeProduto tipoDeProdutoSelecionado,TipoDeProduto tipoDeProduto) throws DaoException;
 	
-	public List<TipoDeProduto> buscarTipoDeProduto(TipoDeProduto tipoDeProduto);
+	public List<TipoDeProduto> buscarTipoDeProduto(TipoDeProduto tipoDeProduto) throws DaoException;
 	
-	public List<TipoDeProduto> buscarTodosTipoDeProduto();
+	public List<TipoDeProduto> buscarTodosTipoDeProduto() throws DaoException;
 	
-	public void removerTipoDeProduto(TipoDeProduto tipoDeProduto);
+	public void removerTipoDeProduto(TipoDeProduto tipoDeProduto) throws DaoException;
 	
 }

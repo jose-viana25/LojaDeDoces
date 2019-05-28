@@ -15,7 +15,7 @@ public class Cliente {
 		return CPF;
 	}
 	public void setCPF( String CPF) {
-		CPF = CPF;
+		this.CPF = CPF;
 	}
 	public String getEmail() {
 		return Email;

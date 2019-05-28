@@ -2,14 +2,14 @@ package dao;
 
 import java.util.ArrayList;
 import java.util.List;
-import entity.Cliente
+import entity.Cliente;
 
 public class DaoCliente implements IDaoCliente{
     private List<Cliente> listCliente = new ArrayList<>();
 
     @Override
     public void criarCliente(Cliente cliente){
-        cliente.setCPF(listCliente.size());
+        cliente.setCPF(String.valueOf(listCliente.size()));
         listCliente.add(cliente);
     }
     @Override
@@ -25,9 +25,9 @@ public class DaoCliente implements IDaoCliente{
     }
     private boolean temPadrao(Cliente cliente, Cliente auxCliente){
         return auxCliente.getNome().toLowerCase().contains(cliente.getNome().toLowerCase())
-        && auxCliente.getCPF().toLowerCase().contains(cliente.getCPF().toLowerCase().contains())
-        && auxCliente.getEmail().toLowerCase().contains(cliente.getEmail().toLowerCase().contains())
-        && auxCliente.getTelefone().toLowerCase().contains(cliente.getTelefone().toLowerCase().contains());
+        && auxCliente.getCPF().toLowerCase().contains(cliente.getCPF().toLowerCase())
+        && auxCliente.getEmail().toLowerCase().contains(cliente.getEmail().toLowerCase())
+        && auxCliente.getTelefone().toLowerCase().contains(cliente.getTelefone().toLowerCase());
 
     }
 
@@ -36,7 +36,7 @@ public class DaoCliente implements IDaoCliente{
 
     }
       @Override
-	public List<Cliente> buscarTodosCliente() {
+	public List<Cliente> buscarTodosClientes() {
 		
 		return listCliente;
 		
