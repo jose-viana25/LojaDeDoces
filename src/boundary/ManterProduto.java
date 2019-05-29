@@ -78,7 +78,12 @@ public class ManterProduto {
 		HBox hbBotoesTabela = criarHboxBotoesTabela();
 
 		criarTableView();
-
+		try {
+			atualizarTabela(ctrProduto.pesquisarTodosProduto());
+		} catch (ControlException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		definirAcaoTabela();
 
 		definirAcaoBotoes();
@@ -100,28 +105,30 @@ public class ManterProduto {
 			if (produtoSelecionado != null) {
 				txtfNome.setText(produtoSelecionado.getNome());
 				txtfValidade.setText(converterDataParaTexto(produtoSelecionado.getValidade()));
-				spQuantidadeEmEstoque.getValueFactory().setValue(produtoSelecionado.getQuantidadeEmEstoque());
-
-				TipoDeProduto auxTipoDeProduto = new TipoDeProduto();
+				txtfValor.setText(String.valueOf(produtoSelecionado.getValor()));
+				spQuantidadeEmEstoque.getValueFactory().setValue(
+						produtoSelecionado.getQuantidadeEmEstoque());
 				
-				
-				cmbTiposDeProdutos.getSelectionModel().select(
-						listTipoDeProduto.indexOf(auxTipoDeProduto));
+				cmbTiposDeProdutos.getSelectionModel().select(produtoSelecionado.getNome_tipoDeProduto());
 
-				Fornecedor auxFornecedor = new Fornecedor();
-				auxFornecedor.setCnpj(produtoSelecionado.getCnpj_fornecedor());
-				try {
-					auxFornecedor = ctrFornecedor.pesquisarFornecedor(
-							auxFornecedor).get(0);
-				} catch (ControlException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				cmbFornecedores.getSelectionModel().select(
-						listFornecedores.indexOf(auxFornecedor));
+				//Corrigir aqui
+				cmbFornecedores.getSelectionModel().select(encontrarNomeFornecedorPorCnpj(
+						produtoSelecionado.getCnpj_fornecedor()));
 			}
 
 		});
+	}
+
+
+	private String encontrarNomeFornecedorPorCnpj(String cnpj_fornecedor) {
+		
+		for (Fornecedor fornecedor : listFornecedores) {
+			if (fornecedor.getCnpj().equals(cnpj_fornecedor)) {
+				return fornecedor.getNome();
+			}
+		}
+		
+		return "";
 	}
 
 	private String converterDataParaTexto(Date data) {
@@ -158,7 +165,7 @@ public class ManterProduto {
 		}
 		
 		
-		// converter tipo de produto para String
+		
 		try {
 			listTipoDeProduto = ctrTipoDeProduto.pesquisarTodosTipoDeProduto();
 		} catch (ControlException e) {
@@ -170,8 +177,9 @@ public class ManterProduto {
 				FXCollections.observableArrayList(
 						listTipoDeProdutoParaString(listTipoDeProduto));
 		cmbTiposDeProdutos = new ComboBox<>(olTiposDeProdutos);
+		cmbTiposDeProdutos.getSelectionModel().select(0);
 
-		// converter fornecedor para String
+		
 		try {
 			listFornecedores = ctrFornecedor.pesquisarTodosFornecedor();
 		} catch (ControlException e) {
@@ -184,6 +192,7 @@ public class ManterProduto {
 				.observableArrayList(
 						listFornecedorParaString(listFornecedores));
 		cmbFornecedores = new ComboBox<>(olFornecedores);
+		cmbFornecedores.getSelectionModel().select(0);
 
 		grid.add(new Label("Nome:"), 0, 0);
 		grid.add(txtfNome, 1, 0);
@@ -261,7 +270,7 @@ public class ManterProduto {
 
 			Produto produto = new Produto();
 
-			produto.setNome(txtfNome.getText());
+			produto.setNome(txtfNome.getText().toLowerCase());
 			produto.setQuantidadeEmEstoque(spQuantidadeEmEstoque.getValue());
 			produto.setValor(Double.parseDouble(txtfValor.getText()));
 			try {
@@ -269,6 +278,7 @@ public class ManterProduto {
 			} catch (ParseException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
+				produto.setValidade(new Date());
 			}
 			
 			Fornecedor auxFornecedor = listFornecedores.get(
@@ -303,8 +313,8 @@ public class ManterProduto {
 
 			Produto produto = new Produto();
 
-			produto.setNome(txtfNome.getText());
-			produto.setQuantidadeEmEstoque(spQuantidadeEmEstoque.getValue());
+			produto.setNome(txtfNome.getText().toLowerCase());
+			/*produto.setQuantidadeEmEstoque(spQuantidadeEmEstoque.getValue());
 			try {
 				produto.setValor(Double.parseDouble(txtfValor.getText()));
 			} catch (NumberFormatException e2) {
@@ -314,13 +324,14 @@ public class ManterProduto {
 				produto.setValidade(converterTextoParaData(txtfValidade.getText()));
 			} catch (ParseException e1) {
 				// TODO Auto-generated catch block
-				e1.printStackTrace();
+				//e1.printStackTrace();
+				System.out.println("Deu ruim na data");
 				produto.setValidade(new Date());
 			}
 			
 			Fornecedor auxFornecedor = listFornecedores.get(
 					cmbFornecedores.getSelectionModel().getSelectedIndex());
-			
+			//remover
 			System.out.println("Forncedor:" + auxFornecedor.toString());
 			produto.setCnpj_fornecedor(auxFornecedor.getCnpj());
 			
@@ -329,6 +340,7 @@ public class ManterProduto {
 			
 			System.out.println("Tipo:" + auxTipoDeProduto.toString());
 			produto.setNome_tipoDeProduto(auxTipoDeProduto.getNome());
+			System.out.println(produto.toString());*/
 			try {
 				atualizarTabela(ctrProduto.pesquisarProduto(produto));
 			} catch (ControlException e) {
@@ -359,11 +371,11 @@ public class ManterProduto {
 					cmbFornecedores.getSelectionModel().getSelectedIndex());
 			
 			produto.setCnpj_fornecedor(auxFornecedor.getCnpj());
-			
-			TipoDeProduto auxTipoDeProduto = listTipoDeProduto.get(
-					cmbFornecedores.getSelectionModel().getSelectedIndex());
 
-			produto.setNome_tipoDeProduto(auxTipoDeProduto.getNome());
+			produto.setNome_tipoDeProduto(
+					cmbTiposDeProdutos.getSelectionModel().getSelectedItem());
+			//Teste
+			System.out.println("Teste: "+produto.getNome_tipoDeProduto());
 			try {
 				ctrProduto.mudarProduto(produtoSelecionado, produto);
 			} catch (ControlException e) {
@@ -439,7 +451,11 @@ public class ManterProduto {
 
 	private void limparCampos() {
 		txtfNome.setText("");
+		spQuantidadeEmEstoque.getValueFactory().setValue(0);
+		txtfValor.setText("");
 		txtfValidade.setText("");
+		cmbFornecedores.getSelectionModel().select(0);
+		cmbTiposDeProdutos.getSelectionModel().select(0);
 	}
 
 	private void criarTableView() {
@@ -455,6 +471,14 @@ public class ManterProduto {
 		TableColumn<Produto, Date> tcValidade = new TableColumn<>("Validade");
 		tcValidade.setCellValueFactory(new PropertyValueFactory<>("Validade"));
 		tcValidade.setPrefWidth(180);
+		
+		TableColumn<Produto, Date> tcTipoDeProduto = new TableColumn<>("Tipo:");
+		tcTipoDeProduto.setCellValueFactory(new PropertyValueFactory<>("nome_tipoDeProduto"));
+		tcTipoDeProduto.setPrefWidth(180);
+		
+		TableColumn<Produto, Date> tcFornecedor = new TableColumn<>("Fornecedor");
+		tcFornecedor.setCellValueFactory(new PropertyValueFactory<>("Cnpj_fornecedor"));
+		tcFornecedor.setPrefWidth(180);
 
 		TableColumn<Produto, Date> tcValor = new TableColumn<>("Valor");
 		tcValor.setCellValueFactory(new PropertyValueFactory<>("Valor"));
@@ -467,6 +491,8 @@ public class ManterProduto {
 		tableResultados.getColumns().add(tcNome);
 		tableResultados.getColumns().add(tcValor);
 		tableResultados.getColumns().add(tcValidade);
+		tableResultados.getColumns().add(tcTipoDeProduto);
+		tableResultados.getColumns().add(tcFornecedor);
 		tableResultados.getColumns().add(tcQuantidadeEmEstoque);
 
 		tableResultados.autosize();

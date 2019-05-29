@@ -58,7 +58,13 @@ public class ManterFornecedor {
 		HBox hbBotoesTabela = criarHboxBotoesTabela();
 
 		criarTableView();
-
+		try {
+			atualizarTabela(ctrFornecedor.pesquisarTodosFornecedor());
+		} catch (ControlException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		definirAcaoTabela();
 		
 		definirAcaoBotoes();
@@ -292,7 +298,6 @@ public class ManterFornecedor {
 		tableResultados.getColumns().add(tcDescricao);
 
 		tableResultados.setPrefHeight(200);
-
 
 	}
 

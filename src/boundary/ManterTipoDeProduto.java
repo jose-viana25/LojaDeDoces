@@ -60,7 +60,13 @@ public class ManterTipoDeProduto /*extends Application*/ {
 		HBox hbBotoesTabela = criarHboxBotoesTabela();
 
 		criarTableView();
-
+		try {
+			atualizarTabela(ctrTipoDeProduto.pesquisarTodosTipoDeProduto());
+		} catch (ControlException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		definirAcaoTabela();
 		
 		definirAcaoBotoes();

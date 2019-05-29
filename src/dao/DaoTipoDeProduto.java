@@ -23,8 +23,8 @@ public class DaoTipoDeProduto implements IDaoTipoDeProduto {
 
 			PreparedStatement pstm = connection.prepareStatement(query);
 
-			pstm.setString(1, tipoDeProduto.getNome().toLowerCase());
-			pstm.setString(2, tipoDeProduto.getDescricao().toLowerCase());
+			pstm.setString(1, tipoDeProduto.getNome());
+			pstm.setString(2, tipoDeProduto.getDescricao());
 
 			pstm.executeUpdate();
 
@@ -113,9 +113,9 @@ public class DaoTipoDeProduto implements IDaoTipoDeProduto {
 
 			PreparedStatement pstm = connection.prepareStatement(query);
 
-			pstm.setString(1, tipoDeProduto.getNome().toLowerCase());
-			pstm.setString(2, tipoDeProduto.getDescricao().toLowerCase());
-			pstm.setString(3, tipoDeProdutoSelecionado.getNome().toLowerCase());
+			pstm.setString(1, tipoDeProduto.getNome());
+			pstm.setString(2, tipoDeProduto.getDescricao());
+			pstm.setString(3, tipoDeProdutoSelecionado.getNome());
 
 			pstm.executeUpdate();
 
@@ -139,7 +139,7 @@ public class DaoTipoDeProduto implements IDaoTipoDeProduto {
 
 			PreparedStatement pstm = connection.prepareStatement(query);
 
-			pstm.setString(1, tipoDeProduto.getNome().toLowerCase());
+			pstm.setString(1, tipoDeProduto.getNome());
 
 			pstm.executeUpdate();
 

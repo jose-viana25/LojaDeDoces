@@ -1,36 +1,12 @@
 package entity;
 
-import java.util.List;
-
 public class Fornecedor {
 	
 	private String cnpj;
 	private String nome;
 	private String endereco;
 	private String descricao;
-	private List<Produto> listProdutos;
 	
-	public Fornecedor() {
-		this.cnpj = "";
-		this.nome = "";
-		this.endereco = "";
-		this.descricao = "";
-	}
-	
-	
-
-	public List<Produto> getListProdutos() {
-		return listProdutos;
-	}
-
-
-
-	public void setListProdutos(List<Produto> listProdutos) {
-		this.listProdutos = listProdutos;
-	}
-
-
-
 	public String getCnpj() {
 		return cnpj;
 	}
@@ -63,6 +39,11 @@ public class Fornecedor {
 		this.descricao = descricao;
 	}
 	
-	
+	public String toString() {
+		return "Cnpj:" + this.cnpj
+				+ "\nNome:" + this.nome
+				+ "\nEndereço:" + this.endereco
+				+ "\nDescrição:" + this.descricao;
+	}
 
 }

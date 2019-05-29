@@ -51,6 +51,14 @@ public class Produto {
 		this.cnpj_fornecedor = codigo_fornecedor;
 	}
 	
+	public String toString() {
+		return "Nome:" + this.nome 
+				+ "\nQuantidade:" + this.quantidadeEmEstoque
+				+ "\nValidade:" + this.validade.toString()
+				+ "\nFornecedor:" + this.cnpj_fornecedor
+				+ "\nTipo:" + this.nome_tipoDeProduto;
+	}
+	
 	
 	
 	

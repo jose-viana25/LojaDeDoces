@@ -1,5 +1,7 @@
 package entity;
 
+import java.util.Date;
+
 public class Funcionario {
 	
 	private String cpf;
@@ -7,6 +9,9 @@ public class Funcionario {
 	private String email;
 	private String senha;
 	private String telefone;
+	private Date dataCadastro;
+	
+	
 	
 	public String getCpf() {
 		return cpf;
@@ -37,6 +42,12 @@ public class Funcionario {
 	}
 	public void setTelefone(String telefone) {
 		this.telefone = telefone;
+	}
+	public Date getDataCadastro() {
+		return dataCadastro;
+	}
+	public void setDataCadastro(Date dataCadastro) {
+		this.dataCadastro = dataCadastro;
 	}
 	
 	

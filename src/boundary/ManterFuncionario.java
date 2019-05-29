@@ -1,16 +1,15 @@
 package boundary;
 
+import java.util.Date;
 import java.util.List;
 
 import controller.ControlException;
 import controller.CtrFuncionario;
 import entity.Funcionario;
-import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
@@ -20,7 +19,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
-import javafx.stage.Stage;
 
 public class ManterFuncionario /*extends Application*/ {
 
@@ -66,7 +64,12 @@ public class ManterFuncionario /*extends Application*/ {
 		HBox hbBotoesTabela = criarHboxBotoesTabela();
 
 		criarTableView();
-
+		try {
+			atualizarTabela(ctrFuncionario.pesquisarTodosFuncionario());
+		} catch (ControlException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		definirAcaoTabela();
 		
 		definirAcaoBotoes();
@@ -168,6 +171,7 @@ public class ManterFuncionario /*extends Application*/ {
 			funcionario.setSenha(passfSenha.getText());
 			funcionario.setEmail(txtfEmail.getText());
 			funcionario.setTelefone(txtfTelefone.getText());
+			funcionario.setDataCadastro(new Date());
 
 			try {
 				ctrFuncionario.cadastrarFuncionario(funcionario);

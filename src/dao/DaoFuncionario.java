@@ -1,5 +1,9 @@
 package dao;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,12 +11,37 @@ import entity.Funcionario;
 
 public class DaoFuncionario implements IDaoFuncionario {
 
-	private List<Funcionario> listFuncionario = new ArrayList<>();
+	
+
+	private Connection connection;
 
 	@Override
 	public void criarFuncionario(Funcionario funcionario) {
 
-		listFuncionario.add(funcionario);
+		try {
+			connection = ConnectionManager.getInstance().getConnection();
+
+			String query = "INSERT INTO funcionario("
+					+ "cpf,nome,email,senha,telefone,data_cadastro) "
+					+ "VALUES(?,?,?,?,?,?);";
+
+			PreparedStatement pstm = connection.prepareStatement(query);
+
+			pstm.setString(1, funcionario.getCpf());
+			pstm.setString(2, funcionario.getNome());
+			pstm.setString(3, funcionario.getEmail());
+			pstm.setString(4, funcionario.getSenha());
+			pstm.setString(5, funcionario.getTelefone());
+			pstm.setDate(6, new java.sql.Date(funcionario.getDataCadastro().getTime()));
+
+			pstm.executeUpdate();
+
+			connection.close();
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 	}
 
@@ -21,31 +50,81 @@ public class DaoFuncionario implements IDaoFuncionario {
 
 		List<Funcionario> listResultado = new ArrayList<>();
 
-		for (Funcionario auxFuncionario : listFuncionario) {
-			if (temPadrao(funcionario, auxFuncionario)) {
+		try {
+			connection = ConnectionManager.getInstance().getConnection();
+
+			String query = "SELECT * FROM funcionario " 
+					+ "WHERE funcionario.cpf LIKE ? "
+					+ "AND funcionario.nome LIKE ? "
+					+ "AND funcionario.email LIKE ? "
+					+ "AND funcionario.telefone LIKE ?"
+					+ ";";
+
+			PreparedStatement pstm = connection.prepareStatement(query);
+
+			pstm.setString(1, "%" + funcionario.getCpf() + "%");
+			pstm.setString(2, "%" + funcionario.getNome() + "%");
+			pstm.setString(3, "%" + funcionario.getEmail() + "%");
+			pstm.setString(4, "%" + funcionario.getTelefone() + "%");
+
+			ResultSet rsResultado = pstm.executeQuery();
+
+			connection.close();
+
+			while (rsResultado.next()) {
+				Funcionario auxFuncionario = new Funcionario();
+				auxFuncionario.setCpf(rsResultado.getString("cpf"));
+				auxFuncionario.setNome(rsResultado.getString("nome"));
+				auxFuncionario.setEmail(rsResultado.getString("email"));
+				auxFuncionario.setTelefone(rsResultado.getString("telefone"));
+				auxFuncionario.setDataCadastro(
+						new java.util.Date(rsResultado.getDate("data_cadastro").getTime()));
+				
 				listResultado.add(auxFuncionario);
 			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-		
+
 		return listResultado;
 
 	}
 
-	private boolean temPadrao(Funcionario funcionario, Funcionario auxFuncionario) {
-		return auxFuncionario.getCpf().toLowerCase().contains(
-				funcionario.getCpf().toLowerCase())
-				&& auxFuncionario.getNome().toLowerCase().contains(
-				funcionario.getNome().toLowerCase())
-				&& auxFuncionario.getEmail().toLowerCase().contains(
-						funcionario.getEmail().toLowerCase())
-				&& auxFuncionario.getTelefone().toLowerCase().contains(
-						funcionario.getTelefone().toLowerCase());
-	}
 	
 	@Override
 	public List<Funcionario> buscarTodosFuncionario() {
 		
-		return listFuncionario;
+		List<Funcionario> listResultado = new ArrayList<>();
+
+		try {
+			connection = ConnectionManager.getInstance().getConnection();
+
+			String query = "SELECT * FROM funcionario;";
+
+			PreparedStatement pstm = connection.prepareStatement(query);
+
+			ResultSet rsResultado = pstm.executeQuery();
+
+			connection.close();
+
+			while (rsResultado.next()) {
+				Funcionario auxFuncionario = new Funcionario();
+				auxFuncionario.setCpf(rsResultado.getString("cpf"));
+				auxFuncionario.setNome(rsResultado.getString("nome"));
+				auxFuncionario.setEmail(rsResultado.getString("email"));
+				auxFuncionario.setTelefone(rsResultado.getString("telefone"));
+				auxFuncionario.setDataCadastro(
+						new java.util.Date(rsResultado.getDate("data_cadastro").getTime()));
+				
+				listResultado.add(auxFuncionario);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return listResultado;
 		
 		
 	}
@@ -53,18 +132,33 @@ public class DaoFuncionario implements IDaoFuncionario {
 	@Override
 	public void alterarFuncionario(Funcionario funcionarioSelecionado,Funcionario funcionario) {
 		
-		for (Funcionario auxFuncionario : listFuncionario) {
-			
-			if (auxFuncionario.getCpf() == 
-					funcionarioSelecionado.getCpf()) {
-				
-				auxFuncionario.setNome(funcionario.getNome());
-				auxFuncionario.setSenha(funcionario.getSenha());
-				auxFuncionario.setEmail(funcionario.getEmail());
-				auxFuncionario.setTelefone(funcionario.getTelefone());
-				
-			}
-			
+		try {
+			connection = ConnectionManager.getInstance().getConnection();
+
+			String query = "UPDATE funcionario SET "
+					+ "funcionario.cpf=?, "
+					+ "funcionario.nome=?, "
+					+ "funcionario.email=?, "
+					+ "funcionario.senha=?, "
+					+ "funcionario.telefone=? "
+					+ "WHERE funcionario.cpf=?;";
+
+			PreparedStatement pstm = connection.prepareStatement(query);
+
+			pstm.setString(1, funcionario.getCpf());
+			pstm.setString(2, funcionario.getNome());
+			pstm.setString(3, funcionario.getEmail());
+			pstm.setString(4, funcionario.getSenha());
+			pstm.setString(5, funcionario.getTelefone());
+			pstm.setString(6, funcionarioSelecionado.getCpf());
+
+			pstm.executeUpdate();
+
+			connection.close();
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 
 	}
@@ -72,16 +166,24 @@ public class DaoFuncionario implements IDaoFuncionario {
 	@Override
 	public void removerFuncionario(Funcionario funcionario) {
 		
-			for (Funcionario auxFuncionario : listFuncionario) {
-				
-				if (auxFuncionario.getCpf().equals( 
-						funcionario.getCpf())) {
-					
-					listFuncionario.remove(auxFuncionario);
-					return;
-				}
-				
-			}
+		try {
+			connection = ConnectionManager.getInstance().getConnection();
+
+			String query ="DELETE FROM funcionario "
+					+ "WHERE funcionario.cpf=?;";
+
+			PreparedStatement pstm = connection.prepareStatement(query);
+
+			pstm.setString(1, funcionario.getCpf());
+
+			pstm.executeUpdate();
+
+			connection.close();
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 	}
 

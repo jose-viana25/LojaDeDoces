@@ -18,6 +18,10 @@ public class TipoDeProduto {
 		this.descricao = descricao;
 	}
 	
+	public String toString() {
+		return "Nome:" + this.nome
+				+ "\nDescrição:" + this.descricao;
+	}
 	
 
 }

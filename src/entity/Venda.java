@@ -9,14 +9,8 @@ public class Venda {
 	private Date data;
 	private String cpf_funcionario;
 	private String cpf_cliente;
-	private List<ItensPedido> itensPedido;
 	
-	public List<ItensPedido> getItensPedido() {
-		return itensPedido;
-	}
-	public void setItensPedido(List<ItensPedido> itensPedido) {
-		this.itensPedido = itensPedido;
-	}
+	
 	public int getCodigo() {
 		return codigo;
 	}
