@@ -4,11 +4,9 @@ import java.util.List;
 
 import controller.ControlException;
 import controller.CtrCliente;
-import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
@@ -21,7 +19,7 @@ import entity.Cliente;
 
 
 
-public class ManterCliente /*extends Application*/ {
+public class ManterCliente {
 	CtrCliente ctrCliente = new CtrCliente();
 	private AnchorPane pane;
 
@@ -40,8 +38,7 @@ public class ManterCliente /*extends Application*/ {
 	private Button btnPesquisar;
 	private static Stage stage;
 
-	//@Override
-	//public void start(Stage stage) throws Exception {
+	
 	public Node criarManterCliente() {
 	
 		iniComponentes();
@@ -49,18 +46,10 @@ public class ManterCliente /*extends Application*/ {
 		iniLayout();
 		criarTabela();
 		
-		return pane;
-		/*Scene scene = new Scene(pane);
-		stage.setScene(scene);
-		stage.show();
-		stage.setResizable(false);
-		stage.setTitle("Cliente - Sweet Dreams");*/
-		
+		return pane;		
 
 	}
 
-	
-		
 	
 
 	private void criarTabela() {
@@ -138,7 +127,7 @@ public class ManterCliente /*extends Application*/ {
 
 			Cliente cliente= new Cliente();
 
-			cliente.setCPF(txCPF.getText());
+			cliente.setCpf(txCPF.getText());
 			cliente.setNome(txNome.getText());
 			cliente.setEmail(txEmail.getText());
 			cliente.setTelefone(txTelefone.getText());
@@ -159,7 +148,7 @@ public class ManterCliente /*extends Application*/ {
 	tabelaCliente.setItems(obsCliente);
 	tabelaCliente.refresh();
 		*/for (Cliente cliente : listCliente) {
-			System.out.println("CPF: "+cliente.getCPF());
+			System.out.println("CPF: "+cliente.getCpf());
 			System.out.println("Nome: "+cliente.getNome());
 			System.out.println("EMail: "+cliente.getEmail());
 			System.out.println("Telefone: "+cliente.getTelefone());
@@ -179,7 +168,7 @@ public class ManterCliente /*extends Application*/ {
 		Cliente cliente = new Cliente();
 		cliente.setNome(txNome.getText());
 		cliente.setEmail(txEmail.getText());
-		cliente.setCPF(txCPF.getText());
+		cliente.setCpf(txCPF.getText());
 		cliente.setTelefone(txTelefone.getText());
 		try {
 			ctrCliente.cadastrarCliente(cliente);

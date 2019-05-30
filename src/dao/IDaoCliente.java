@@ -7,5 +7,6 @@ public interface IDaoCliente{
     public void criarCliente(Cliente cliente) throws DaoException;
     public List<Cliente> buscarCliente (Cliente cliente) throws DaoException;
     public List<Cliente> buscarTodosClientes() throws DaoException;
+    public void alterar(Cliente clienteSelecionado, Cliente cliente);
     public void removerCliente(Cliente cliente) throws DaoException;
 }

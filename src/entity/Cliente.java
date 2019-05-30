@@ -1,39 +1,51 @@
 package entity;
 
+import java.util.Date;
+
 public class Cliente {
-	private String CPF;
-	private String Email;
-	private String Nome;
-	private String Telefone;
 	
-	public Cliente cliente() {
-		return null;
-		
-	}
+	private String cpf;
+	private String email;
+	private String nome;
+	private String telefone;
+	private Date dataNascimento;
+	private Date dataCadastro;
 	
-	public String getCPF() {
-		return CPF;
+	public Date getDataNascimento() {
+		return dataNascimento;
 	}
-	public void setCPF( String CPF) {
-		this.CPF = CPF;
+	public void setDataNascimento(Date dataNascimento) {
+		this.dataNascimento = dataNascimento;
+	}
+	public Date getDataCadastro() {
+		return dataCadastro;
+	}
+	public void setDataCadastro(Date dataCadastro) {
+		this.dataCadastro = dataCadastro;
+	}
+	public String getCpf() {
+		return cpf;
+	}
+	public void setCpf( String Cpf) {
+		this.cpf = Cpf;
 	}
 	public String getEmail() {
-		return Email;
+		return email;
 	}
 	public void setEmail(String email) {
-		Email = email;
+		this.email = email;
 	}
 	public String getNome() {
-		return Nome;
+		return nome;
 	}
 	public void setNome(String nome) {
-		Nome = nome;
+		this.nome = nome;
 	}
 	public String getTelefone() {
-		return Telefone;
+		return telefone;
 	}
 	public void setTelefone(String telefone) {
-		Telefone = telefone;
+		this.telefone = telefone;
 	}
 
 }
