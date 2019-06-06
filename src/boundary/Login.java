@@ -82,6 +82,13 @@ public class Login extends Application {
 
 	private void logar() {
 		if (txLogin.getText().equals("admin") && txSenha.getText().equals("admin")) {
+			
+			try {
+				Desktop.getDesktop().browse(new URI("TelaPrincipal.java"));
+				} catch (Exception e) {
+					e.printStackTrace();
+		}
+	}
 
 		} else {
 			JOptionPane.showMessageDialog(null, "Login e/ou Senha Inválida", "Erro", JOptionPane.ERROR_MESSAGE);
