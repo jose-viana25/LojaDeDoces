@@ -4,7 +4,10 @@ public class Main {
 
 	public static void main(String[] args) {
 		
-		TelaPrincipal.main(args);
+		Login.main(args);
+		if(Login ==true){
+			TelaPrincipal.main(args);
+		}
 	}
 
 }
