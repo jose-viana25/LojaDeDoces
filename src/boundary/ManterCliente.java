@@ -116,6 +116,7 @@ public class ManterCliente {
 	}
 
 	private void iniButton() {
+		Cliente cliente= new Cliente();
 		btnCadastrar.setOnAction((event) -> {
 			cadastrarCliente();
 		});
@@ -125,7 +126,7 @@ public class ManterCliente {
 		
 		btnPesquisar.setOnAction((event) -> {
 
-			Cliente cliente= new Cliente();
+			
 
 			cliente.setCpf(txCPF.getText());
 			cliente.setNome(txNome.getText());
@@ -141,6 +142,66 @@ public class ManterCliente {
 			limparCampos();
 
 		});
+		btnAlterar.setOnAction((event) -> {
+
+			
+cliente.setCpf(txCPF.getText());
+			cliente.setNome(txNome.getText());
+			cliente.setEmail(txEmail.getText());
+			cliente.setTelefone(txTelefone.getText());
+			System.out.println(txCPF);
+			try {
+				//ctrFornecedor.mudarFornecedor(fornecedorSelecionado, fornecedor);
+			} catch (ControlException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+			limparCampos();
+
+			try {
+				atualizarTabela(ctrFornecedor.pesquisarTodosFornecedor());
+			} catch (ControlException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+		});
+		
+		btnRemover.setOnAction((event)->{
+			cliente.setCpf(txCPF.getText());
+			cliente.setNome(txNome.getText());
+			cliente.setEmail(txEmail.getText());
+			cliente.setTelefone(txTelefone.getText());
+			System.out.println(txCPF);
+			
+			try {
+				//ctrFornecedor.apagarFornecedor(fornecedor);
+			} catch (ControlException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			try {
+				atualizarTabela(ctrFornecedor.pesquisarTodosFornecedor());
+			} catch (ControlException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		});
+	}
+	private HBox criarBotoesTabela() {
+		HBox hbBotoesTabela = new HBox();
+		hbBotoesTabela.setAlignment(Pos.CENTER_RIGHT);
+
+		btnAlterar = new Button("Alterar");
+
+		btnRemover = new Button("Remover");
+
+		hbBotoesTabela.getChildren().addAll(btnAlterar, btnRemover);
+
+		return hbBotoesTabela;
 	}
 
 	private void atualizarTabela(List<Cliente> listCliente) {
